@@ -23,6 +23,7 @@ public class GameMenu {
         this.initialY = yPos;
         this.title = gameMenuTitle;
         return this;
+		Debug.Log("GameMenu created");
     }
 
 
@@ -35,6 +36,7 @@ public class GameMenu {
             button.onClick(a);
         }
 
+		Debug.Log("Game Menu: Game Menu Button " + buttonText + " created");
         return this;
     }
 

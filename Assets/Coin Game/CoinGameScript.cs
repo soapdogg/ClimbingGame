@@ -20,6 +20,7 @@ public class CoinGameScript : MonoBehaviour
 
 	void Start ()
 	{
+		Debug.Log("Coin Game Scene Entered");
 		pauseMenu = pauseMenu.GetComponent<Canvas> ();
 		endGameMenu = endGameMenu.GetComponent<Canvas> ();
 
@@ -54,22 +55,24 @@ public class CoinGameScript : MonoBehaviour
 			}
 		}
 		if(Input.GetKeyUp(KeyCode.Space)) canPressSpace = true;
-
 	}
 
     public void ResumePressed()
     {
+		Debug.Log("Coin Game: ResumePressed()");
         pauseMenu.enabled = false;
 		currentState = GameState.GameRunning;
     }
 
     public void GoToMainPressed()
     {
+		Debug.Log("Coin Game: GoToMainPressed()");
         SceneManager.LoadScene("MainMenu");
     }
 		
 	public void StartPressed()
     {
+		Debug.Log("Coin Game: StartPressed()");
         if (currentState == GameState.NewGame)
         {
             startTime = Time.time;
@@ -79,6 +82,7 @@ public class CoinGameScript : MonoBehaviour
 
     public void PausePressed()
     {
+		Debug.Log("Coin Game: PausePressed()");
         if (currentState == GameState.GameRunning)
         {
             currentState = GameState.GameStopped;
@@ -88,6 +92,7 @@ public class CoinGameScript : MonoBehaviour
 
     public void ResetGamePressed()
 	{
+		Debug.Log("Coin Game: ResetGamePressed()");
 		while (listOfCoins.Count > 0) {
 			GameObject obj = listOfCoins [0];
 			Destroy (obj);
@@ -98,6 +103,7 @@ public class CoinGameScript : MonoBehaviour
 
 	public void PlayAgainPressed()
 	{
+		Debug.Log("Coin Game: PlayAgainPressed()");
 		InitializeGame ();
 	}
 
@@ -110,6 +116,7 @@ public class CoinGameScript : MonoBehaviour
 
 	private void RemoveCoin(GameObject obj)
 	{
+		Debug.Log("Coin Game: RemoveCoin()");
 		listOfCoins.Remove(obj);
 		Destroy(obj);
 		if(listOfCoins.Count == 0)
@@ -144,6 +151,7 @@ public class CoinGameScript : MonoBehaviour
 		
 	private void InitializeGame()
 	{
+		Debug.Log("Coin Game: InitializeGame()");
 		startTime = 0f;
 		elapsedTime = 0f;
 		currentState = GameState.NewGame;

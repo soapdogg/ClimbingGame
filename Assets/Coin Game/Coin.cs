@@ -11,6 +11,7 @@ public class Coin{
         coinObject.GetComponent<Renderer>().material.color = new Color(219, 235, 0);
         coinObject.name = "Coin_" + num;
         coinObject.transform.position = new Vector3(x, y, 0);
+		Debug.Log(coinObject.name + " created");
     }
 }
 

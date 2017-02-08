@@ -16,6 +16,7 @@ public class MainMenuScript : MonoBehaviour
 	    startText = startText.GetComponent<Button>();
 	    exitText = exitText.GetComponent<Button>();
 	    quitMenu.enabled = false;
+		Debug.Log("Main Menu: Start()");
 	}
 
     public void ExitPressed()
@@ -23,6 +24,7 @@ public class MainMenuScript : MonoBehaviour
         quitMenu.enabled = true;
         startText.enabled = false;
         exitText.enabled = false;
+		Debug.Log("Main Menu: ExitPressed()");
     }
 
     public void NoPressed()
@@ -30,15 +32,18 @@ public class MainMenuScript : MonoBehaviour
         quitMenu.enabled = false;
         startText.enabled = true;
         exitText.enabled = true;
+		Debug.Log("Main Menu: NoPressed()");
     }
 
     public void PlayPressed()
     {
+		Debug.Log("Main Menu: PlayPressed()");
         SceneManager.LoadScene("CoinGame");
     }
 
     public void YesPressed()
     {
+		Debug.Log("Main Menu: YesPressed()"); 
         #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
         #else
