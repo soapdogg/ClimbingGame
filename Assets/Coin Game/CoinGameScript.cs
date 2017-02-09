@@ -12,7 +12,7 @@ public class CoinGameScript : MonoBehaviour
 	public Canvas endGameMenu;
 
 	private List<GameObject> listOfCoins;
-    private float startTime, elapsedTime;
+    private float startTime, elapsedTime, initialTime;
     private GameState currentState;
     private bool canPressSpace;
 
@@ -33,7 +33,7 @@ public class CoinGameScript : MonoBehaviour
 		if (currentState == GameState.GameRunning)
 		{
 			//update timer
-			elapsedTime = Time.time - startTime;
+			elapsedTime = Time.time - startTime + initialTime;
 
 			//debug mode - delete coin on click
 			if (Input.GetMouseButtonDown(0))
@@ -62,6 +62,7 @@ public class CoinGameScript : MonoBehaviour
 		Debug.Log("Coin Game: ResumePressed()");
         pauseMenu.enabled = false;
 		currentState = GameState.GameRunning;
+		startTime = Time.time;
     }
 
     public void GoToMainPressed()
@@ -87,6 +88,7 @@ public class CoinGameScript : MonoBehaviour
         {
             currentState = GameState.GameStopped;
 			pauseMenu.enabled = true;
+			initialTime = Time.time - startTime + initialTime;
         }
     }
 
@@ -154,6 +156,7 @@ public class CoinGameScript : MonoBehaviour
 		Debug.Log("Coin Game: InitializeGame()");
 		startTime = 0f;
 		elapsedTime = 0f;
+		initialTime = 0f;
 		currentState = GameState.NewGame;
 		canPressSpace = true;
 		pauseMenu.enabled = false;
