@@ -133,12 +133,12 @@ public class CoinGameScript : MonoBehaviour
 
 	private void OnGUI()
     {
-        new GameMenu().createMenu(10, 10, "Coin Game")
-            .addGameMenuButton("Start", () => this.StartPressed())
-            .addGameMenuButton("Pause", () => this.PausePressed())
-            .addGameMenuButton("Reset", () => this.ResetGamePressed())
+		new GameMenu().createMenu(10, 10, "Coin Game")
+			.addGameMenuButton("Start", () => this.StartPressed())
+			.addGameMenuButton("Pause", () => this.PausePressed())
+			.addGameMenuButton("Reset", () => this.ResetGamePressed())
 			.addGameMenuButton("High Scores", () => this.HighScorePressed())
-            .build();
+			.build();
     }
 		
 
@@ -159,5 +159,6 @@ public class CoinGameScript : MonoBehaviour
 			// draggable?
 			listOfCoins.Add(new Coin(i, Random.Range(-COIN_X_BOUND, COIN_X_BOUND), Random.Range(-COIN_Y_BOUND, COIN_Y_BOUND)).coinObject);
 		}     	
+
 	}
 }
