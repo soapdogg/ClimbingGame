@@ -10,6 +10,7 @@ public class CoinGameScript : MonoBehaviour
     private float COIN_Y_BOUND = 4f;
     public Canvas pauseMenu;
 	public Canvas endGameMenu;
+	public Text timeText;
 
 	private List<GameObject> listOfCoins;
     private float startTime, elapsedTime, initialTime;
@@ -34,6 +35,7 @@ public class CoinGameScript : MonoBehaviour
 		{
 			//update timer
 			elapsedTime = Time.time - startTime + initialTime;
+			timeText.text = string.Format("{0:0.00}", Mathf.Round(elapsedTime * 100.0f) / 100.0f);
 
 			//debug mode - delete coin on click
 			if (Input.GetMouseButtonDown(0))
@@ -137,20 +139,9 @@ public class CoinGameScript : MonoBehaviour
             .addGameMenuButton("Reset", () => this.ResetGamePressed())
 			.addGameMenuButton("High Scores", () => this.HighScorePressed())
             .build();
-
-        createTimer();
-
     }
 		
-	private void createTimer()
-    {
-        GUIStyle guiStyle = new GUIStyle();
-        guiStyle.fontSize = 60;
-        guiStyle.normal.textColor = Color.white;
-        guiStyle.alignment = TextAnchor.UpperRight;
-        GUI.Label(new Rect(10, 10, Screen.width - 30, 100), string.Format("{0:0.00}", Mathf.Round(elapsedTime * 100.0f) / 100.0f), guiStyle);
-    }
-		
+
 	private void InitializeGame()
 	{
 		Debug.Log("Coin Game: InitializeGame()");
@@ -161,7 +152,7 @@ public class CoinGameScript : MonoBehaviour
 		canPressSpace = true;
 		pauseMenu.enabled = false;
 		endGameMenu.enabled = false;
-
+		timeText.text = string.Format("{0:0.00}", Mathf.Round(elapsedTime * 100.0f) / 100.0f);
 		for (int i = 0; i < 5; i++)
 		{
 			// TODO: make sure they don't overlap
