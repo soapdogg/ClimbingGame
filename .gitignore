@@ -29,5 +29,5 @@ sysinfo.txt
 *.apk
 *.unitypackage
 
-# DS Store
+#DS Store
 .DS_Store
