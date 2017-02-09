@@ -5,12 +5,10 @@ using System.Collections.Generic;
 
 public class CoinGameScript : MonoBehaviour
 {
-
-	private float COIN_X_BOUND = 8f;
-    private float COIN_Y_BOUND = 4f;
-    public Canvas pauseMenu;
-	public Canvas endGameMenu;
-	public Text timeText;
+	private const float COIN_X_BOUND = 8f;
+    private const float COIN_Y_BOUND = 4f;
+    public Canvas pauseMenu, endGameMenu;
+	public Text timeText, startText, pauseText;
 
 	private List<GameObject> listOfCoins;
     private float startTime, elapsedTime, initialTime;
@@ -22,8 +20,6 @@ public class CoinGameScript : MonoBehaviour
 	void Start ()
 	{
 		Debug.Log("Coin Game Scene Entered");
-		pauseMenu = pauseMenu.GetComponent<Canvas> ();
-		endGameMenu = endGameMenu.GetComponent<Canvas> ();
 
 		listOfCoins = new List<GameObject>();
 		InitializeGame ();
@@ -63,6 +59,7 @@ public class CoinGameScript : MonoBehaviour
     {
 		Debug.Log("Coin Game: ResumePressed()");
         pauseMenu.enabled = false;
+		pauseText.enabled = true;
 		currentState = GameState.GameRunning;
 		startTime = Time.time;
     }
@@ -80,6 +77,8 @@ public class CoinGameScript : MonoBehaviour
         {
             startTime = Time.time;
             currentState = GameState.GameRunning;
+			startText.enabled = false;
+			pauseText.enabled = true;
         }
     }
 
@@ -90,6 +89,7 @@ public class CoinGameScript : MonoBehaviour
         {
             currentState = GameState.GameStopped;
 			pauseMenu.enabled = true;
+			pauseText.enabled = false;
 			initialTime = Time.time - startTime + initialTime;
         }
     }
@@ -115,9 +115,7 @@ public class CoinGameScript : MonoBehaviour
 	{
 		Debug.Log("Todo: make high score scene");
 	}
-
-
-
+		
 	private void RemoveCoin(GameObject obj)
 	{
 		Debug.Log("Coin Game: RemoveCoin()");
@@ -126,21 +124,11 @@ public class CoinGameScript : MonoBehaviour
 		if(listOfCoins.Count == 0)
 		{
 			endGameMenu.enabled = true;
+			pauseText.enabled = false;
 			currentState = GameState.GameStopped;
 			Debug.Log("Game over! Time = " + elapsedTime);
 		}
 	}
-
-	private void OnGUI()
-    {
-        new GameMenu().createMenu(10, 10, "Coin Game")
-            .addGameMenuButton("Start", () => this.StartPressed())
-            .addGameMenuButton("Pause", () => this.PausePressed())
-            .addGameMenuButton("Reset", () => this.ResetGamePressed())
-			.addGameMenuButton("High Scores", () => this.HighScorePressed())
-            .build();
-    }
-		
 
 	private void InitializeGame()
 	{
@@ -152,6 +140,8 @@ public class CoinGameScript : MonoBehaviour
 		canPressSpace = true;
 		pauseMenu.enabled = false;
 		endGameMenu.enabled = false;
+		pauseText.enabled = false;
+		startText.enabled = true;
 		timeText.text = string.Format("{0:0.00}", Mathf.Round(elapsedTime * 100.0f) / 100.0f);
 		for (int i = 0; i < 5; i++)
 		{

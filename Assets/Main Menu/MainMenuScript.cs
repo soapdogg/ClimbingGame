@@ -9,12 +9,8 @@ public class MainMenuScript : MonoBehaviour
     public Button startText;
     public Button exitText;
 
-	// Use this for initialization
 	void Start ()
 	{
-	    quitMenu = quitMenu.GetComponent<Canvas>();
-	    startText = startText.GetComponent<Button>();
-	    exitText = exitText.GetComponent<Button>();
 	    quitMenu.enabled = false;
 		Debug.Log("Main Menu: Start()");
 	}
