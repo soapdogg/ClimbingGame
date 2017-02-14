@@ -2,6 +2,8 @@
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using System.IO;
+using System;
 
 public class CoinGameScript : MonoBehaviour
 {
@@ -132,7 +134,7 @@ public class CoinGameScript : MonoBehaviour
 
 	private void InitializeGame()
 	{
-		Debug.Log("Coin Game: InitializeGame()");
+		Debug.Log ("Coin Game: InitializeGame()");
 		startTime = 0f;
 		elapsedTime = 0f;
 		initialTime = 0f;
@@ -142,13 +144,22 @@ public class CoinGameScript : MonoBehaviour
 		endGameMenu.enabled = false;
 		pauseText.enabled = false;
 		startText.enabled = true;
-		timeText.text = string.Format("{0:0.00}", Mathf.Round(elapsedTime * 100.0f) / 100.0f);
-		for (int i = 0; i < 5; i++)
-		{
-			// TODO: make sure they don't overlap
-			// draggable?
-			listOfCoins.Add(new Coin(i, Random.Range(-COIN_X_BOUND, COIN_X_BOUND), Random.Range(-COIN_Y_BOUND, COIN_Y_BOUND)).coinObject);
-		}     	
+		timeText.text = string.Format ("{0:0.00}", Mathf.Round (elapsedTime * 100.0f) / 100.0f);
 
+
+
+		string path = Path.Combine ("Assets", "Coin Game");
+		path = Path.Combine(path, "coinGamePresets.txt");
+		StreamReader sr = new StreamReader (path);
+		int counter = 0;
+		while (!sr.EndOfStream) {
+			string line = sr.ReadLine ();
+			string[] lineSplit = line.Split (',');
+			float x = float.Parse (lineSplit [0]);
+			float y = float.Parse (lineSplit [1]);
+			Coin c = new Coin (counter++, x, y);
+			listOfCoins.Add (c.coinObject);
+		}
+		sr.Close ();
 	}
 }
