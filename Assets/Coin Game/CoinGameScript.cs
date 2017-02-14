@@ -19,6 +19,8 @@ public class CoinGameScript : MonoBehaviour
 
     public enum GameState { NewGame, GameRunning, GameStopped }
 
+	private enum Difficulty {EASY, MEDIUM, HARD};
+
 	void Start ()
 	{
 		Debug.Log("Coin Game Scene Entered");
@@ -149,10 +151,12 @@ public class CoinGameScript : MonoBehaviour
 
 
 		string path = Path.Combine ("Assets", "Coin Game");
-		path = Path.Combine(path, "coinGamePresets.txt");
+		path = Path.Combine (path, "presets");
+		path = Path.Combine(path, "easy1.txt");
 		StreamReader sr = new StreamReader (path);
 		int counter = 0;
-		while (!sr.EndOfStream) {
+		while (!sr.EndOfStream) 
+		{
 			string line = sr.ReadLine ();
 			string[] lineSplit = line.Split (',');
 			float x = float.Parse (lineSplit [0]);
