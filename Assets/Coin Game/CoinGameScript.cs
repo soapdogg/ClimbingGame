@@ -3,29 +3,29 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using System.IO;
-using System;
 
 public class CoinGameScript : MonoBehaviour
 {
 	private const float COIN_X_BOUND = 8f;
     private const float COIN_Y_BOUND = 4f;
-    public Canvas pauseMenu, endGameMenu;
-	public Text timeText, startText, pauseText;
+    public Canvas pauseMenu, endGameMenu, difficultyMenu;
+	public Text timeText, startText, pauseText, difficultyText;
 
 	private List<GameObject> listOfCoins;
     private float startTime, elapsedTime, initialTime;
     private GameState currentState;
     private bool canPressSpace;
+	private Difficulty currentDifficulty;
 
     public enum GameState { NewGame, GameRunning, GameStopped }
 
-	private enum Difficulty {EASY, MEDIUM, HARD};
+	private enum Difficulty {Easy, Medium, Hard};
 
 	void Start ()
 	{
 		Debug.Log("Coin Game Scene Entered");
-
 		listOfCoins = new List<GameObject>();
+		currentDifficulty = Difficulty.Easy;
 		InitializeGame ();
 	}
 
@@ -62,8 +62,7 @@ public class CoinGameScript : MonoBehaviour
     public void ResumePressed()
     {
 		Debug.Log("Coin Game: ResumePressed()");
-        pauseMenu.enabled = false;
-		pauseText.enabled = true;
+		EnablePauseVisuals (false);
 		currentState = GameState.GameRunning;
 		startTime = Time.time;
     }
@@ -81,8 +80,8 @@ public class CoinGameScript : MonoBehaviour
         {
             startTime = Time.time;
             currentState = GameState.GameRunning;
-			startText.enabled = false;
-			pauseText.enabled = true;
+			EnableStartVisuals (true);
+			GenerateCoins ();
         }
     }
 
@@ -92,8 +91,7 @@ public class CoinGameScript : MonoBehaviour
         if (currentState == GameState.GameRunning)
         {
             currentState = GameState.GameStopped;
-			pauseMenu.enabled = true;
-			pauseText.enabled = false;
+			EnablePauseVisuals (true);
 			initialTime = Time.time - startTime + initialTime;
         }
     }
@@ -119,7 +117,33 @@ public class CoinGameScript : MonoBehaviour
 	{
 		Debug.Log("Todo: make high score scene");
 	}
-		
+
+	public void ChangeDifficultyPressed(){
+		Debug.Log ("Coin Game: Change Difficulty Pressed()");
+		EnableDifficultyVisuals (true);
+	}
+
+	public void EasyPressed(){
+		SetDifficulty (Difficulty.Easy);
+		Debug.Log("Difficulty Set to Easy");
+	}
+
+	public void MediumPressed(){
+		SetDifficulty (Difficulty.Medium);
+		Debug.Log ("Difficulty Set to Medium");
+	}
+
+	public void HardPressed(){
+		SetDifficulty (Difficulty.Hard);
+		Debug.Log ("Difficulty Set to Hard");
+	}
+
+	private void SetDifficulty(Difficulty d){
+		currentDifficulty = d;
+		SetDifficultyText ();
+		EnableDifficultyVisuals (false);
+	}
+
 	private void RemoveCoin(GameObject obj)
 	{
 		Debug.Log("Coin Game: RemoveCoin()");
@@ -142,17 +166,17 @@ public class CoinGameScript : MonoBehaviour
 		initialTime = 0f;
 		currentState = GameState.NewGame;
 		canPressSpace = true;
-		pauseMenu.enabled = false;
-		endGameMenu.enabled = false;
-		pauseText.enabled = false;
-		startText.enabled = true;
-		timeText.text = string.Format ("{0:0.00}", Mathf.Round (elapsedTime * 100.0f) / 100.0f);
+		DisableMenus ();
+		EnableStartVisuals (false);
+		SetDifficultyText ();
+	}
 
+	private void SetDifficultyText(){
+		difficultyText.text = "Change Difficulty\nCurrent: " + currentDifficulty.ToString (); 	
+	}
 
-
-		string path = Path.Combine ("Assets", "Coin Game");
-		path = Path.Combine (path, "presets");
-		path = Path.Combine(path, "easy1.txt");
+	private void GenerateCoins(){
+		string path = GetPresetCoinPath ();
 		StreamReader sr = new StreamReader (path);
 		int counter = 0;
 		while (!sr.EndOfStream) 
@@ -165,5 +189,40 @@ public class CoinGameScript : MonoBehaviour
 			listOfCoins.Add (c.coinObject);
 		}
 		sr.Close ();
+
 	}
+
+	private string GetPresetCoinPath(){
+		string diff = currentDifficulty.ToString ();
+		string presetNum = Random.Range (1, 5).ToString();
+		string path = Path.Combine ("Assets", "Coin Game");
+		path = Path.Combine (path, "presets");
+		Debug.Log ("Using Coin Preset " + diff + " " + presetNum);	
+		return Path.Combine(path, diff + presetNum + ".txt");
+	}
+
+	private void EnableDifficultyVisuals(bool enable){
+		difficultyMenu.enabled = enable;
+		difficultyText.enabled = !enable;
+		startText.enabled = !enable;	
+	}
+
+	private void EnableStartVisuals(bool enable){
+		startText.enabled = !enable;
+		pauseText.enabled = enable;
+		timeText.enabled = enable;
+		difficultyText.enabled = !enable;	
+	}
+
+	private void EnablePauseVisuals(bool enable){
+		pauseMenu.enabled = enable;
+		pauseText.enabled = !enable;
+	}
+
+	private void DisableMenus(){
+		pauseMenu.enabled = false;
+		endGameMenu.enabled = false;
+		difficultyMenu.enabled = false;
+	}
+		
 }
