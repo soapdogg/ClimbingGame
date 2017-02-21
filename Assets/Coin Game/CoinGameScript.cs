@@ -181,9 +181,14 @@ public class CoinGameScript : MonoBehaviour
 		EnableDifficultyVisuals (false);
 	}
 
+	private ParticleSystem ps;
+
 	private void RemoveCoin (GameObject obj)
 	{
 //		Debug.Log ("Coin Game: RemoveCoin()");
+		ps = GameObject.FindGameObjectWithTag ("CoinParticleSystem").GetComponent<ParticleSystem> () as ParticleSystem;
+		ps.transform.position = obj.transform.position;
+		ps.Play ();
 		listOfCoins.Remove (obj);
 		Destroy (obj);
 		if (listOfCoins.Count == 0) {

@@ -14,7 +14,7 @@ public class HighScoreScript
 
 		Debug.Log (String.Format ("The best score is: {0}", list [0]));
 		Debug.Log (String.Format ("{0}'s score places them in spot {1} out of {2}", 
-			name, list.IndexOf (userHighScore), list.Count));
+			name, list.IndexOf (userHighScore) + 1, list.Count));
 	}
 
 	public static HighScore writeHighScore (string name, float score)
