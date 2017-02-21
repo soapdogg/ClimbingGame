@@ -7,7 +7,7 @@ using System;
 
 public class HighScoreScript
 {
-	public static void checkHighScore (string difficulty, string name, float score)
+	public static void checkHighScore (string name, float score)
 	{
 		HighScore userHighScore = writeHighScore (name, score);
 		List<HighScore> list = getOrderedScores ();
