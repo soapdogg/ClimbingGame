@@ -34,7 +34,7 @@ public class MainMenuScript : MonoBehaviour
     public void PlayPressed()
     {
 		    Debug.Log("Main Menu: PlayPressed()");
-        	SceneManager.LoadScene("GameCountdown");
+        	SceneManager.LoadScene("CoinGame");
     }
 
     public void YesPressed()

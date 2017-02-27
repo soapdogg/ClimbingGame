@@ -1,7 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Runtime.InteropServices;
 using UnityEngine;
 using Kinect;
@@ -262,8 +259,6 @@ public class KinectSensor : MonoBehaviour, KinectInterface {
 			{
 				NativeMethods.NuiImageStreamSetImageFrameFlags 
 										(depthStreamHandle, NuiImageStreamFlags.EnableNearMode);
-				//test = NativeMethods.NuiImageStreamSetImageFrameFlags 
-				//						(depthStreamHandle, NuiImageStreamFlags.TooFarIsNonZero);
 			}
 			
 			else

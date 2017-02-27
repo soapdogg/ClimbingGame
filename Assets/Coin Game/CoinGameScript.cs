@@ -6,9 +6,6 @@ using System.IO;
 
 public class CoinGameScript : MonoBehaviour
 {
-	private const float COIN_X_BOUND = 8f;
-    private const float COIN_Y_BOUND = 4f;
-
     public Canvas pauseMenu, endGameMenu, difficultyMenu;
 	public Text timeText, startText, pauseText, difficultyText;
     public GameObject skeleton;

@@ -1,7 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
 using UnityEngine;
@@ -354,9 +351,7 @@ namespace Kinect {
 	
 	public struct NuiImageViewArea
 	{
-	    int eDigitalZoom_NotUsed;
-	    long lCenterX_NotUsed;
-	    long lCenterY_NotUsed;
+
 	}
 	
 	[StructLayout(LayoutKind.Sequential)]
@@ -376,7 +371,6 @@ namespace Kinect {
 		public uint dwFrameNumber;
 		public NuiImageType eImageType;
 		public NuiImageResolution eResolution;
-		//[MarshalAsAttribute(UnmanagedType.LPStruct)]
 		public IntPtr pFrameTexture;
 		public uint dwFrameFlags_NotUsed;
 		public NuiImageViewArea ViewArea_NotUsed;

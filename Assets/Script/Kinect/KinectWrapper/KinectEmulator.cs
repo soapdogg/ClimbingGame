@@ -1,16 +1,12 @@
 using UnityEngine;
-using System.Collections;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Runtime.Serialization;
 using Kinect;
 
 public class KinectEmulator : MonoBehaviour, KinectInterface {
 	
 	public string inputFile = "Assets/Kinect/Recordings/playback0";
-	private string inputFileDefault = "Assets/Kinect/Recordings/playbackDefault";
 	private float playbackSpeed = 0.0333f;
-	private float timer = 0;
 	private bool isDefault = true;
 	
 	/// <summary>
@@ -32,18 +28,7 @@ public class KinectEmulator : MonoBehaviour, KinectInterface {
 	private bool newSkeleton = false;
 	private int curFrame = 0;
 	private NuiSkeletonFrame[] skeletonFrame;
-	/// <summary>
-	///variables used for updating and accessing depth data 
-	/// </summary>
-	//private bool updatedColor = false;
-	//private bool newColor = false;
-	//private Color32[] colorImage;
-	/// <summary>
-	///variables used for updating and accessing depth data 
-	/// </summary>
-	//private bool updatedDepth = false;
-	//private bool newDepth = false;
-	//private short[] depthPlayerData;
+
 	
 	
 	// Use this for initialization
@@ -52,7 +37,6 @@ public class KinectEmulator : MonoBehaviour, KinectInterface {
 	}
 	
 	void Update () {
-		timer += Time.deltaTime;
 		if(Input.GetKeyUp(KeyCode.F12)) {
 			if(isDefault) {
 				isDefault = false;
@@ -79,7 +63,6 @@ public class KinectEmulator : MonoBehaviour, KinectInterface {
 			skeletonFrame[ii] = serialSkeleton[ii].deserialize();
 		}
 		input.Close();
-		timer = 0;
 		Debug.Log("Simulating "+@filePath);
 	}
 	
@@ -106,11 +89,7 @@ public class KinectEmulator : MonoBehaviour, KinectInterface {
 	NuiSkeletonFrame KinectInterface.getSkeleton() {
 		return skeletonFrame[curFrame % skeletonFrame.Length];
 	}
-	/*
-	NuiSkeletonBoneOrientation[] KinectInterface.getBoneOrientations(NuiSkeletonFrame skeleton){
-		return null;
-	}
-	*/
+
 	NuiSkeletonBoneOrientation[] KinectInterface.getBoneOrientations(NuiSkeletonData skeletonData){
 		NuiSkeletonBoneOrientation[] boneOrientations = new NuiSkeletonBoneOrientation[(int)(NuiSkeletonPositionIndex.Count)];
 		NativeMethods.NuiSkeletonCalculateBoneOrientations(ref skeletonData, boneOrientations);
