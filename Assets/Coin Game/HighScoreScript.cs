@@ -4,27 +4,45 @@ using UnityEngine;
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using System;
+using System.Diagnostics;
+using System.Xml.Linq;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class HighScoreScript
 {
-	public static void checkHighScore (string name, float score)
-	{
-		HighScore userHighScore = writeHighScore (name, score);
-		List<HighScore> list = getOrderedScores ();
+	private const int MAX_NUM_OF_HIGH_SCORES = 5;
 
-		Debug.Log (String.Format ("The best score is: {0}", list [0]));
-		Debug.Log (String.Format ("{0}'s score places them in spot {1} out of {2}", 
-			name, list.IndexOf (userHighScore) + 1, list.Count));
+	public static void writeHighScore (string name, float score)
+	{
+		List<HighScore> list = new List<HighScore> ();
+		list = getOrderedScores ();
+		list.Add (new HighScore (name, score));
+		updateHighScoreListFile (list);
 	}
 
-	public static HighScore writeHighScore (string name, float score)
+	public static bool isHighScore (float score)
 	{
-		HighScore userScore;
-		using (StreamWriter sw = File.AppendText (getHighScoreFilePath ())) {
-			userScore = new HighScore (name, score);
-			sw.WriteLine (userScore.ToString ());
+		List<HighScore> list = new List<HighScore> ();
+		list = getOrderedScores ();
+
+		if (list.Count < MAX_NUM_OF_HIGH_SCORES || (list [MAX_NUM_OF_HIGH_SCORES - 1] as HighScore).score > score) {
+			return true;
 		}
-		return userScore;
+		return false;
+	}
+
+	public static void updateHighScoreListFile (List<HighScore> list)
+	{
+		list.Sort ();
+		list.Reverse ();
+		if (list.Count > MAX_NUM_OF_HIGH_SCORES) {
+			list.RemoveAt (list.Count - 1);
+		}
+
+		using (StreamWriter sw = new StreamWriter (getHighScoreFilePath ())) {
+			foreach (HighScore hs in list)
+				sw.WriteLine (hs.ToString ());
+		}
 	}
 
 	public static string getHighScoreFilePath ()

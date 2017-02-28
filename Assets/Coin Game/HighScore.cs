@@ -37,6 +37,11 @@ public class HighScore : IComparable<HighScore>
 		return Equals (hs);
 	}
 
+	public override int GetHashCode ()
+	{
+		return base.GetHashCode ();
+	}
+
 	public bool Equals (HighScore other)
 	{
 		return name.Equals (other.name) && score == other.score;

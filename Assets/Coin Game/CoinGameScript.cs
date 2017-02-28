@@ -129,7 +129,7 @@ public class CoinGameScript : MonoBehaviour
 	{
 		InputField nameField = GameObject.FindGameObjectWithTag ("CoinGameScoreName").GetComponent<InputField> () as InputField;
 		if (nameField.text.Length > 0) {
-			HighScoreScript.checkHighScore (nameField.text.ToLower (), elapsedTime);
+			HighScoreScript.writeHighScore (nameField.text.ToLower (), elapsedTime);
 			submitHighScore.interactable = false;
 			submitHighScoreName.enabled = false;
 			HighScorePressed ();
@@ -196,6 +196,13 @@ public class CoinGameScript : MonoBehaviour
 			pauseText.enabled = false;
 			currentState = GameState.GameStopped;
 			Debug.Log ("Game over! Time = " + elapsedTime);
+			if (HighScoreScript.isHighScore (elapsedTime)) {
+				//TODO
+				GameObject.FindGameObjectWithTag ("HighScoreContainer").GetComponent<GameObject> ().SetActive (true);
+			} else {
+				//TODO
+				//GameObject.FindGameObjectWithTag ("HighScoreContainer").GetComponent<GameObject> ().SetActive (false);
+			}
 		}
 	}
 
