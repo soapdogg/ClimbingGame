@@ -2,7 +2,6 @@ using UnityEngine;
 using System.Collections;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Runtime.Serialization;
 using Kinect;
 
 public class KinectRecorder : MonoBehaviour {

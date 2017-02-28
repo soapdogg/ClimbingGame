@@ -7,8 +7,7 @@
  */
 
 using UnityEngine;
-using System;
-using System.Collections;
+
 
 public class KinectModelControllerV2 : MonoBehaviour {
 	
@@ -16,7 +15,7 @@ public class KinectModelControllerV2 : MonoBehaviour {
 	public enum BoneMask
 	{
 		None = 0x0,
-		//EMPTY = 0x1,
+
 		Spine = 0x2,
 		Shoulder_Center = 0x4,
 		Head = 0x8,
@@ -32,7 +31,6 @@ public class KinectModelControllerV2 : MonoBehaviour {
 		Knee_Left = 0x2000,
 		Ankle_Left = 0x4000,
 		Foot_Left = 0x8000,
-		//EMPTY = 0x10000,
 		Knee_Right = 0x20000,
 		Ankle_Right = 0x40000,
 		Foot_Right = 0x80000,
@@ -58,13 +56,11 @@ public class KinectModelControllerV2 : MonoBehaviour {
 	public GameObject Elbow_Left;
 	public GameObject Wrist_Left;
 	public GameObject Hand_Left;
-	public GameObject Fingers_Left; //unused
 	public GameObject Collar_Right;
 	public GameObject Shoulder_Right;
 	public GameObject Elbow_Right;
 	public GameObject Wrist_Right;
 	public GameObject Hand_Right;
-	public GameObject Fingers_Right; //unused
 	public GameObject Hip_Override;
 	public GameObject Hip_Left;
 	public GameObject Knee_Left;
@@ -85,7 +81,6 @@ public class KinectModelControllerV2 : MonoBehaviour {
 	
 	private Quaternion[] _baseRotation; //starting orientation of the joints
 	private Vector3[] _boneDir; //in the bone's local space, the direction of the bones
-	private Vector3[] _boneUp; //in the bone's local space, the up vector of the bone
 	private Vector3 _hipRight; //right vector of the hips
 	private Vector3 _chestRight; //right vectory of the chest
 	
