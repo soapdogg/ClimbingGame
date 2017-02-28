@@ -3,6 +3,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using System.IO;
+using System;
 
 public class CoinGameScript : MonoBehaviour
 {
@@ -18,6 +19,8 @@ public class CoinGameScript : MonoBehaviour
 	private Difficulty currentDifficulty;
     public enum GameState { NewGame, GameRunning, GameStopped }
 	public enum Difficulty {Easy, Medium, Hard};
+	private Button submitHighScore;
+	private InputField submitHighScoreName;
 
 	private CoinGameScript(){
 	}
@@ -31,20 +34,21 @@ public class CoinGameScript : MonoBehaviour
 		InitializeGame ();
 	}
 
-	void Update () 
+	void Update ()
 	{
-		if (currentState == GameState.GameRunning)
-		{
+		if (currentState == GameState.GameRunning) {
 			//update timer
 			elapsedTime = Time.time - startTime + initialTime;
-			timeText.text = string.Format("{0:0.00}", Mathf.Round(elapsedTime * 100.0f) / 100.0f);
+			timeText.text = string.Format ("{0:0.00}", Mathf.Round (elapsedTime * 100.0f) / 100.0f);
+
 			//debug mode - delete coin on click
-			if (Input.GetMouseButtonDown(0))
-			{
-				Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+			if (Input.GetMouseButtonDown (0)) {
+				Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
 				RaycastHit hit;
-				if (Physics.Raycast(ray, out hit, 10f)) Debug.DrawRay(ray.origin, hit.point);
-				if (hit.collider != null) RemoveCoin(GameObject.Find(hit.collider.gameObject.name));
+				if (Physics.Raycast (ray, out hit, 10f))
+					Debug.DrawRay (ray.origin, hit.point);
+				if (hit.collider != null)
+					RemoveCoin (GameObject.Find (hit.collider.gameObject.name));
 			}
 		}
 	}
@@ -56,17 +60,27 @@ public class CoinGameScript : MonoBehaviour
 		EnableDifficultyVisuals (false);
 	}
 
-	private void RemoveCoin(GameObject obj)
+	private ParticleSystem ps;
+
+	private void RemoveCoin (GameObject obj)
 	{
-		Debug.Log("Coin Game: RemoveCoin()");
-		listOfCoins.Remove(obj);
-		Destroy(obj);
-		if(listOfCoins.Count == 0)
-		{
+		ps = GameObject.FindGameObjectWithTag ("CoinParticleSystem").GetComponent<ParticleSystem> () as ParticleSystem;
+		ps.transform.position = obj.transform.position;
+		ps.Play ();
+		listOfCoins.Remove (obj);
+		Destroy (obj);
+		if (listOfCoins.Count == 0) {
 			endGameMenu.enabled = true;
 			pauseText.enabled = false;
 			currentState = GameState.GameStopped;
-			Debug.Log("Game over! Time = " + elapsedTime);
+			Debug.Log ("Game over! Time = " + elapsedTime);
+			if (HighScoreScript.isHighScore (elapsedTime)) {
+				Debug.Log ("That's a high score! Enter your name");
+				submitHighScore.transform.localScale = new Vector3 (1f, 1f, 1f); //show
+				submitHighScoreName.transform.localScale = new Vector3 (1f, 1f, 1f); //show
+			} else {
+				Debug.Log ("No high score :(");
+			}
 		}
 	}
 
@@ -77,7 +91,6 @@ public class CoinGameScript : MonoBehaviour
 
 	public void InitializeGame()
 	{
-		Debug.Log ("Coin Game: InitializeGame()");
 		startTime = 0f;
 		elapsedTime = 0f;
 		initialTime = 0f;
@@ -86,9 +99,18 @@ public class CoinGameScript : MonoBehaviour
 		DisableMenus ();
 		EnableStartVisuals (false);
 		SetDifficultyText ();
-        skeleton = GameObject.Find("SkeletonPoints");
-        SetSkeletonActive(false);
-    }
+		/*if (submitHighScore == null) {
+			submitHighScore = GameObject.FindGameObjectWithTag ("CoinGameSubmitHighScoreButton").GetComponent<Button> () as Button;
+			submitHighScoreName = GameObject.FindGameObjectWithTag ("CoinGameScoreName").GetComponent<InputField> () as InputField;
+		}
+		submitHighScore.interactable = true;
+		submitHighScoreName.enabled = true;
+		submitHighScore.transform.localScale = new Vector3 (0f, 0f, 0f); //hide initially
+		submitHighScoreName.transform.localScale = new Vector3 (0f, 0f, 0f); //hide initially
+		*/
+		skeleton = GameObject.Find ("SkeletonPoints");
+		SetSkeletonActive (false);
+	}
 
 	private void SetDifficultyText()
 	{
@@ -100,8 +122,7 @@ public class CoinGameScript : MonoBehaviour
 		string path = GetPresetCoinPath ();
 		StreamReader sr = new StreamReader (path);
 		int counter = 0;
-		while (!sr.EndOfStream) 
-		{
+		while (!sr.EndOfStream) {
 			string line = sr.ReadLine ();
 			string[] lineSplit = line.Split (',');
 			float x = float.Parse (lineSplit [0]);
@@ -113,14 +134,13 @@ public class CoinGameScript : MonoBehaviour
 
 	}
 
-	private string GetPresetCoinPath()
+	private string GetPresetCoinPath ()
 	{
 		string diff = currentDifficulty.ToString ();
-		string presetNum = Random.Range (1, 5).ToString();
+		string presetNum = UnityEngine.Random.Range (1, 5).ToString ();
 		string path = Path.Combine ("Assets", "Coin Game");
 		path = Path.Combine (path, "presets");
-		Debug.Log ("Using Coin Preset " + diff + " " + presetNum);	
-		return Path.Combine(path, diff + presetNum + ".txt");
+		return Path.Combine (path, diff + presetNum + ".txt");
 	}
 
 	public void EnableDifficultyVisuals(bool enable)
@@ -144,7 +164,7 @@ public class CoinGameScript : MonoBehaviour
 		pauseText.enabled = !enable;
 	}
 
-	private void DisableMenus()
+	private void DisableMenus ()
 	{
 		pauseMenu.enabled = false;
 		endGameMenu.enabled = false;

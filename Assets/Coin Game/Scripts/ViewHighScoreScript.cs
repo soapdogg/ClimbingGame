@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class HighScoreScript: MonoBehaviour, IPointerEnterHandler
+public class ViewHighScoreScript: MonoBehaviour, IPointerEnterHandler
 {
 
     void OnTriggerEnter2D(Collider2D other)
