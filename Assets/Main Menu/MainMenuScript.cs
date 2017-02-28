@@ -1,49 +1,28 @@
 ﻿using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class MainMenuScript : MonoBehaviour
 {
 
+    private static MainMenuScript singleton;
+
     public Canvas quitMenu;
-    public Button startText;
-    public Button exitText;
+    public Text startText;
+    public Text exitText;
+
+    private MainMenuScript()
+    {
+    }
 
 	void Start ()
 	{
-	    quitMenu.enabled = false;
+	    singleton = this;
+        quitMenu.enabled = false;
 		Debug.Log("Main Menu: Start()");
 	}
 
-    public void ExitPressed()
+    public static MainMenuScript GetMainMenuScript()
     {
-        quitMenu.enabled = true;
-        startText.enabled = false;
-        exitText.enabled = false;
-		Debug.Log("Main Menu: ExitPressed()");
-    }
-
-    public void NoPressed()
-    {
-        quitMenu.enabled = false;
-        startText.enabled = true;
-        exitText.enabled = true;
-		Debug.Log("Main Menu: NoPressed()");
-    }
-
-    public void PlayPressed()
-    {
-		    Debug.Log("Main Menu: PlayPressed()");
-        	SceneManager.LoadScene("GameCountdown");
-    }
-
-    public void YesPressed()
-    {
-		Debug.Log("Main Menu: YesPressed()"); 
-        #if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
-        #else
-            Application.Quit();
-        #endif
+        return singleton;
     }
 }
