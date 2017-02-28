@@ -99,7 +99,7 @@ public class CoinGameScript : MonoBehaviour
 		DisableMenus ();
 		EnableStartVisuals (false);
 		SetDifficultyText ();
-		/*if (submitHighScore == null) {
+		if (submitHighScore == null) {
 			submitHighScore = GameObject.FindGameObjectWithTag ("CoinGameSubmitHighScoreButton").GetComponent<Button> () as Button;
 			submitHighScoreName = GameObject.FindGameObjectWithTag ("CoinGameScoreName").GetComponent<InputField> () as InputField;
 		}
@@ -107,7 +107,7 @@ public class CoinGameScript : MonoBehaviour
 		submitHighScoreName.enabled = true;
 		submitHighScore.transform.localScale = new Vector3 (0f, 0f, 0f); //hide initially
 		submitHighScoreName.transform.localScale = new Vector3 (0f, 0f, 0f); //hide initially
-		*/
+
 		skeleton = GameObject.Find ("SkeletonPoints");
 		SetSkeletonActive (false);
 	}
