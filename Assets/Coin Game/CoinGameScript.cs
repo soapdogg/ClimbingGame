@@ -7,36 +7,29 @@ using System;
 
 public class CoinGameScript : MonoBehaviour
 {
-	public Canvas pauseMenu, endGameMenu, difficultyMenu;
-	public Text timeText, startText, pauseText, difficultyText;
-	public GameObject skeleton;
+	private static CoinGameScript singleton;
 
-	private List<GameObject> listOfCoins;
-	private float startTime, elapsedTime, initialTime;
+    public Canvas pauseMenu, endGameMenu, difficultyMenu;
+	public Text timeText, startText, pauseText, difficultyText;
+    public GameObject skeleton;
+	public List<GameObject> listOfCoins;
+    public float startTime, elapsedTime, initialTime;
+    public GameState currentState;
+    private bool canPressSpace;
+	private Difficulty currentDifficulty;
+    public enum GameState { NewGame, GameRunning, GameStopped }
+	public enum Difficulty {Easy, Medium, Hard};
 	private Button submitHighScore;
 	private InputField submitHighScoreName;
-	private GameState currentState;
-	private bool canPressSpace;
-	private Difficulty currentDifficulty;
 
-	public enum GameState
-	{
-		NewGame,
-		GameRunning,
-		GameStopped
+	private CoinGameScript(){
 	}
-
-	private enum Difficulty
-	{
-		Easy,
-		Medium,
-		Hard}
-
-	;
 
 	void Start ()
 	{
-		listOfCoins = new List<GameObject> ();
+		singleton = this;
+		Debug.Log("Coin Game Scene Entered");
+		listOfCoins = new List<GameObject>();
 		currentDifficulty = Difficulty.Easy;
 		InitializeGame ();
 	}
@@ -58,122 +51,9 @@ public class CoinGameScript : MonoBehaviour
 					RemoveCoin (GameObject.Find (hit.collider.gameObject.name));
 			}
 		}
-
-		//spacebar can start timer
-		if (Input.GetKeyDown (KeyCode.Space)) {
-			if (canPressSpace) {
-				canPressSpace = false;
-				if (currentState == GameState.NewGame)
-					StartPressed ();
-			}
-		}
-		if (Input.GetKeyUp (KeyCode.Space))
-			canPressSpace = true;
 	}
-
-	public void ResumePressed ()
-	{
-		Debug.Log ("Coin Game: ResumePressed()");
-		EnablePauseVisuals (false);
-		currentState = GameState.GameRunning;
-		startTime = Time.time;
-		SetSkeletonActive (true);
-	}
-
-	public void GoToMainPressed ()
-	{
-		Debug.Log ("Coin Game: GoToMainPressed()");
-		SceneManager.LoadScene ("MainMenu");
-	}
-
-	public void StartPressed ()
-	{
-		if (currentState == GameState.NewGame) {
-			startTime = Time.time;
-			currentState = GameState.GameRunning;
-			EnableStartVisuals (true);
-			GenerateCoins ();
-			SetSkeletonActive (true);
-		}
-	}
-
-	public void PausePressed ()
-	{
-		Debug.Log ("Coin Game: PausePressed()");
-		if (currentState == GameState.GameRunning) {
-			currentState = GameState.GameStopped;
-			EnablePauseVisuals (true);
-			initialTime = Time.time - startTime + initialTime;
-			SetSkeletonActive (false);
-		}
-	}
-
-	public void ResetGamePressed ()
-	{
-		Debug.Log ("Coin Game: ResetGamePressed()");
-		while (listOfCoins.Count > 0) {
-			GameObject obj = listOfCoins [0];
-			Destroy (obj);
-			listOfCoins.Remove (obj);
-		}
-		SetSkeletonActive (true);
-		InitializeGame ();
-	}
-
-	public void PlayAgainPressed ()
-	{
-		InitializeGame ();
-	}
-
-	public void EnterNewHighScorePressed ()
-	{
-		InputField nameField = GameObject.FindGameObjectWithTag ("CoinGameScoreName").GetComponent<InputField> () as InputField;
-		if (nameField.text.Length > 0) {
-			HighScoreScript.writeHighScore (nameField.text.ToLower (), elapsedTime);
-			submitHighScore.interactable = false;
-			submitHighScoreName.enabled = false;
-			HighScorePressed ();
-		} else {
-			Debug.Log ("Please enter your name first!");
-		}
-	}
-
-	public void HighScorePressed ()
-	{
-		//temp solution
-		List<HighScore> scores = HighScoreScript.getOrderedScores ();
-		for (int i = 0; i < scores.Count; i++) {
-			Debug.Log (String.Format ("{0}) {1}, {2}", i + 1, scores [i].name, scores [i].score));
-		}
-	}
-
-
-
-	public void ChangeDifficultyPressed ()
-	{
-		Debug.Log ("Coin Game: Change Difficulty Pressed()");
-		EnableDifficultyVisuals (true);
-	}
-
-	public void EasyPressed ()
-	{
-		SetDifficulty (Difficulty.Easy);
-		Debug.Log ("Difficulty Set to Easy");
-	}
-
-	public void MediumPressed ()
-	{
-		SetDifficulty (Difficulty.Medium);
-		Debug.Log ("Difficulty Set to Medium");
-	}
-
-	public void HardPressed ()
-	{
-		SetDifficulty (Difficulty.Hard);
-		Debug.Log ("Difficulty Set to Hard");
-	}
-
-	private void SetDifficulty (Difficulty d)
+		
+	public void SetDifficulty(Difficulty d)
 	{
 		currentDifficulty = d;
 		SetDifficultyText ();
@@ -182,7 +62,7 @@ public class CoinGameScript : MonoBehaviour
 
 	private ParticleSystem ps;
 
-	private void RemoveCoin (GameObject obj)
+	public void RemoveCoin (GameObject obj)
 	{
 		ps = GameObject.FindGameObjectWithTag ("CoinParticleSystem").GetComponent<ParticleSystem> () as ParticleSystem;
 		ps.transform.position = obj.transform.position;
@@ -204,12 +84,12 @@ public class CoinGameScript : MonoBehaviour
 		}
 	}
 
-	private void SetSkeletonActive (bool active)
-	{
-		skeleton.SetActive (active);
-	}
+    public void SetSkeletonActive(bool active)
+    {
+        skeleton.SetActive(active);
+    }
 
-	private void InitializeGame ()
+	public void InitializeGame()
 	{
 		startTime = 0f;
 		elapsedTime = 0f;
@@ -227,16 +107,17 @@ public class CoinGameScript : MonoBehaviour
 		submitHighScoreName.enabled = true;
 		submitHighScore.transform.localScale = new Vector3 (0f, 0f, 0f); //hide initially
 		submitHighScoreName.transform.localScale = new Vector3 (0f, 0f, 0f); //hide initially
+
 		skeleton = GameObject.Find ("SkeletonPoints");
 		SetSkeletonActive (false);
 	}
 
-	private void SetDifficultyText ()
+	private void SetDifficultyText()
 	{
 		difficultyText.text = "Change Difficulty\nCurrent: " + currentDifficulty.ToString (); 	
 	}
 
-	private void GenerateCoins ()
+	public void GenerateCoins()
 	{
 		string path = GetPresetCoinPath ();
 		StreamReader sr = new StreamReader (path);
@@ -262,14 +143,14 @@ public class CoinGameScript : MonoBehaviour
 		return Path.Combine (path, diff + presetNum + ".txt");
 	}
 
-	private void EnableDifficultyVisuals (bool enable)
+	public void EnableDifficultyVisuals(bool enable)
 	{
 		difficultyMenu.enabled = enable;
 		difficultyText.enabled = !enable;
 		startText.enabled = !enable;	
 	}
 
-	private void EnableStartVisuals (bool enable)
+	public void EnableStartVisuals(bool enable)
 	{
 		startText.enabled = !enable;
 		pauseText.enabled = enable;
@@ -277,7 +158,7 @@ public class CoinGameScript : MonoBehaviour
 		difficultyText.enabled = !enable;	
 	}
 
-	private void EnablePauseVisuals (bool enable)
+	public void EnablePauseVisuals(bool enable)
 	{
 		pauseMenu.enabled = enable;
 		pauseText.enabled = !enable;
@@ -288,5 +169,10 @@ public class CoinGameScript : MonoBehaviour
 		pauseMenu.enabled = false;
 		endGameMenu.enabled = false;
 		difficultyMenu.enabled = false;
+	}
+
+	public static CoinGameScript GetCoinGameScript()
+	{
+		return singleton;
 	}
 }

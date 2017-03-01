@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class CollisionScript : MonoBehaviour {
 
     void OnTriggerEnter(Collider other)
     {
         Debug.Log("collision of this: " + this.name + " other: " + other.name);
-        Destroy(other.gameObject);
+        CoinGameScript coinScript = CoinGameScript.GetCoinGameScript();
+        coinScript.RemoveCoin(other.gameObject);
 
     }
 
