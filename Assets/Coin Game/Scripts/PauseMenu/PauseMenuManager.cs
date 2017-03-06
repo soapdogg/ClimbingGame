@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class PauseMenuManager : MonoBehaviour
+public class PauseMenuManager : MonoBehaviour, IManager
 {
 	public static PauseMenuManager singleton;
 
@@ -41,7 +41,7 @@ public class PauseMenuManager : MonoBehaviour
 		pauseMenu.enabled = enable;
 	}
 
-	private void Initialize()
+	public void Initialize()
 	{
 		pauseMenu.enabled = false;
 	}

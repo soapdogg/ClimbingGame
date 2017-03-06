@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class EndGameMenuManager : MonoBehaviour
+public class EndGameMenuManager : MonoBehaviour, IManager
 {
 	public Canvas endGameMenu;
 
@@ -31,7 +31,7 @@ public class EndGameMenuManager : MonoBehaviour
 		Debug.Log("Todo: make high score scene");
 	}
 
-	private void Initialize()
+	public void Initialize()
 	{
 		endGameMenu.enabled = false;
 	}

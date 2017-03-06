@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class OverlayManager :MonoBehaviour
+public class OverlayManager :MonoBehaviour, IManager
 {
 	public static OverlayManager singleton { get; private set; }
 
@@ -60,7 +60,7 @@ public class OverlayManager :MonoBehaviour
 		initialTime = 0f;	
 	}
 
-	private void Initialize()
+	public void Initialize()
 	{
 		ResetTimes ();
 		EnableStartVisuals (false);

@@ -2,7 +2,7 @@
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public class DifficultyMenuManager :MonoBehaviour
+public class DifficultyMenuManager :MonoBehaviour, IManager
 {
 	public Difficulty currentDifficulty { get; private set; }
 	public Canvas difficultyMenu;

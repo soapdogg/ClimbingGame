@@ -2,7 +2,7 @@
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class CoinGameManager : MonoBehaviour
+public class CoinGameManager : MonoBehaviour, IManager
 {
 	public static CoinGameManager singleton { get; private set; }
 
@@ -15,7 +15,7 @@ public class CoinGameManager : MonoBehaviour
 	void Start ()
 	{
 		singleton = this;
-		SetStateToNew ();
+		Initialize ();
 		Debug.Log("Coin Game Scene Entered");
 	}
 
@@ -43,5 +43,10 @@ public class CoinGameManager : MonoBehaviour
 	public GameState GetGameState()
 	{
 		return currentState;
+	}
+
+	public void Initialize()
+	{
+		SetStateToNew ();	
 	}
 }

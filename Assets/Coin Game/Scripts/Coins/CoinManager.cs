@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.IO;
 
-public class CoinManager : MonoBehaviour
+public class CoinManager : MonoBehaviour, IManager
 {
 	private const int NUM_COINS = 5;
 	private int numPressed;
