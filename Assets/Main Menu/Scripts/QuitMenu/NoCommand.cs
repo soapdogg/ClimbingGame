@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class ViewHighScoreCommand: MonoBehaviour, ICommand
+public class NoCommand : MonoBehaviour, ICommand
 {
     public void OnTriggerEnter2D(Collider2D other)
     {
@@ -15,7 +15,10 @@ public class ViewHighScoreCommand: MonoBehaviour, ICommand
 
     public void Execute()
     {
-        Debug.Log("Todo: make high score scene");
+        MainMenuOverlayManager.singleton.exitText.enabled = true;
+        MainMenuOverlayManager.singleton.startText.enabled = true;
+        QuitMenuManager.singleton.quitMenu.enabled = false;
+        Debug.Log("Main Menu: NoPressed()");
     }
 
     public void OnPointerEnter(PointerEventData eventData)

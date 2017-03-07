@@ -1,16 +1,4 @@
-/*
- * KinectModelController.cs - Moves every 'bone' given to match
- * 				the position of the corresponding bone given by
- * 				the kinect. Useful for viewing the point tracking
- * 				in 3D.
- * 
- * 		Developed by Peter Kinney -- 6/30/2011
- * 
- */
-
 using UnityEngine;
-using System;
-using System.Collections;
 
 public class KinectPointController : MonoBehaviour {
 	
@@ -74,41 +62,30 @@ public class KinectPointController : MonoBehaviour {
 	public GameObject Ankle_Right;
 	public GameObject Foot_Right;
 	
-	private GameObject[] _bones; //internal handle for the bones of the model
-	//private Vector4[] _bonePos; //internal handle for the bone positions from the kinect
-	
-	public int player;
+	private GameObject[] _bones; 
+
 	public BoneMask Mask = BoneMask.All;
 	
 	public float scale = 1.0f;
 	
-	// Use this for initialization
 	void Start () {
-		//store bones in a list for easier access
-		_bones = new GameObject[(int)Kinect.NuiSkeletonPositionIndex.Count] {Hip_Center, Spine, Shoulder_Center, Head,
+		_bones = new [] {Hip_Center, Spine, Shoulder_Center, Head,
 			Shoulder_Left, Elbow_Left, Wrist_Left, Hand_Left,
 			Shoulder_Right, Elbow_Right, Wrist_Right, Hand_Right,
 			Hip_Left, Knee_Left, Ankle_Left, Foot_Left,
 			Hip_Right, Knee_Right, Ankle_Right, Foot_Right};
-		//_bonePos = new Vector4[(int)BoneIndex.Num_Bones];
 		
 	}
 	
-	// Update is called once per frame
 	void Update () {
-		if(player == -1)
-			return;
-		//update all of the bones positions
-		if (sw.pollSkeleton())
+		if (SkeletonWrapper.singleton.PollSkeleton())
 		{
 			for( int ii = 0; ii < (int)Kinect.NuiSkeletonPositionIndex.Count; ii++) {
-				//_bonePos[ii] = sw.getBonePos(ii);
 				if( ((uint)Mask & (uint)(1 << ii) ) > 0 ){
-					//_bones[ii].transform.localPosition = sw.bonePos[player,ii];
 					_bones[ii].transform.localPosition = new Vector3(
-						sw.bonePos[player,ii].x * scale,
-						sw.bonePos[player,ii].y * scale,
-						sw.bonePos[player,ii].z * scale);
+						sw.bonePos[0,ii].x * scale,
+						sw.bonePos[0,ii].y * scale,
+						sw.bonePos[0,ii].z * scale);
 				}
 			}
 		}

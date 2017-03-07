@@ -1,8 +1,10 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
-public class ViewHighScoreCommand: MonoBehaviour, ICommand
+public class PlayCommand : MonoBehaviour, ICommand
 {
+
     public void OnTriggerEnter2D(Collider2D other)
     {
         Execute();
@@ -15,7 +17,8 @@ public class ViewHighScoreCommand: MonoBehaviour, ICommand
 
     public void Execute()
     {
-        Debug.Log("Todo: make high score scene");
+        Debug.Log("Main Menu: PlayPressed()");
+        SceneManager.LoadScene("CoinGame");
     }
 
     public void OnPointerEnter(PointerEventData eventData)

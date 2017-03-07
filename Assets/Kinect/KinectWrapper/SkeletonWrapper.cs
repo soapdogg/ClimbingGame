@@ -1,30 +1,21 @@
 using UnityEngine;
 
-public class SkeletonWrapper : MonoBehaviour {
+public class SkeletonWrapper : MonoBehaviour
+{
+	public static SkeletonWrapper singleton { get; private set; }
+	private Kinect.IKinectInterface kinect;
+
+    private bool updatedSkeleton;
+	private bool newSkeleton;
 	
-	private Kinect.KinectInterface kinect;
-	
-	private bool updatedSkeleton = false;
-	private bool newSkeleton = false;
-	
-	[HideInInspector]
-	public Kinect.NuiSkeletonTrackingState[] players;
-	[HideInInspector]
-	public int[] trackedPlayers;
+	private Kinect.NuiSkeletonTrackingState[] players;
+	private int[] trackedPlayers;
 	[HideInInspector]
 	public Vector3[,] bonePos;
-	[HideInInspector]
-	public Vector3[,] rawBonePos;
-	[HideInInspector]
-	public Vector3[,] boneVel;
-	[HideInInspector]
-	public Quaternion[,] boneLocalOrientation;
-	[HideInInspector]
-	public Quaternion[,] boneAbsoluteOrientation;
+	private Vector3[,] rawBonePos;
 	
-	public Kinect.NuiSkeletonPositionTrackingState[,] boneState;	
-	private System.Int64 ticks;
-	private float deltaTime;
+
+	private long ticks;
 	
 	private Matrix4x4 kinectToWorld;
 	public Matrix4x4 flipMatrix;
@@ -32,6 +23,7 @@ public class SkeletonWrapper : MonoBehaviour {
 	// Use this for initialization
 	void Start ()
 	{
+	    singleton = this;
 	    kinect = KinectSensor.Instance;
 		players = new Kinect.NuiSkeletonTrackingState[Kinect.Constants.NuiSkeletonCount];
 		trackedPlayers = new int[Kinect.Constants.NuiSkeletonMaxTracked];
@@ -39,21 +31,16 @@ public class SkeletonWrapper : MonoBehaviour {
 		trackedPlayers[1] = -1;
 		bonePos = new Vector3[2,(int)Kinect.NuiSkeletonPositionIndex.Count];
 		rawBonePos = new Vector3[2,(int)Kinect.NuiSkeletonPositionIndex.Count];
-		boneVel = new Vector3[2,(int)Kinect.NuiSkeletonPositionIndex.Count];
-		
-		boneState = new Kinect.NuiSkeletonPositionTrackingState[2,(int)Kinect.NuiSkeletonPositionIndex.Count];
-		boneLocalOrientation = new Quaternion[2, (int)Kinect.NuiSkeletonPositionIndex.Count];
-		boneAbsoluteOrientation = new Quaternion[2, (int)Kinect.NuiSkeletonPositionIndex.Count];
 		
 		//create the transform matrix that converts from kinect-space to world-space
 		Matrix4x4 trans = new Matrix4x4();
-		trans.SetTRS( new Vector3(-kinect.getKinectCenter().x,
-		                          kinect.getSensorHeight()-kinect.getKinectCenter().y,
-		                          -kinect.getKinectCenter().z),
+		trans.SetTRS( new Vector3(-kinect.GetKinectCenter().x,
+		                          kinect.GetSensorHeight()-kinect.GetKinectCenter().y,
+		                          -kinect.GetKinectCenter().z),
 		             Quaternion.identity, Vector3.one );
 		Matrix4x4 rot = new Matrix4x4();
 		Quaternion quat = new Quaternion();
-		double theta = Mathf.Atan((kinect.getLookAt().y+kinect.getKinectCenter().y-kinect.getSensorHeight()) / (kinect.getLookAt().z + kinect.getKinectCenter().z));
+		double theta = Mathf.Atan((kinect.GetLookAt().y+kinect.GetKinectCenter().y-kinect.GetSensorHeight()) / (kinect.GetLookAt().z + kinect.GetKinectCenter().z));
 		float kinectAngle = (float)(theta * (180 / Mathf.PI));
 		quat.eulerAngles = new Vector3(-kinectAngle, 0, 0);
 		rot.SetTRS( Vector3.zero, quat, Vector3.one);
@@ -62,12 +49,8 @@ public class SkeletonWrapper : MonoBehaviour {
 		kinectToWorld = flipMatrix*trans*rot;
 	}
 	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-	
-	void LateUpdate () {
+	void LateUpdate ()
+    {
 		updatedSkeleton = false;
 		newSkeleton = false;
 	}
@@ -80,24 +63,23 @@ public class SkeletonWrapper : MonoBehaviour {
 	/// <returns>
 	/// A <see cref="System.Boolean"/>
 	/// </returns>
-	public bool pollSkeleton () {
+	public bool PollSkeleton ()
+    {
 		if (!updatedSkeleton)
 		{
 			updatedSkeleton = true;
-			if (kinect.pollSkeleton())
+			if (kinect.PollSkeleton())
 			{
 				newSkeleton = true;
-				System.Int64 cur = kinect.getSkeleton().liTimeStamp;
-				System.Int64 diff = cur - ticks;
+				long cur = kinect.GetSkeleton().liTimeStamp;
 				ticks = cur;
-				deltaTime = diff / (float)1000;
-				processSkeleton();
+				ProcessSkeleton();
 			}
 		}
 		return newSkeleton;
 	}
 	
-	private void processSkeleton () {
+	private void ProcessSkeleton () {
 		int[] tracked = new int[Kinect.Constants.NuiSkeletonMaxTracked];
 		tracked[0] = -1;
 		tracked[1] = -1;
@@ -105,7 +87,7 @@ public class SkeletonWrapper : MonoBehaviour {
 		//update players
 		for (int ii = 0; ii < Kinect.Constants.NuiSkeletonCount; ii++)
 		{
-			players[ii] = kinect.getSkeleton().SkeletonData[ii].eTrackingState;
+			players[ii] = kinect.GetSkeleton().SkeletonData[ii].eTrackingState;
 			if (players[ii] == Kinect.NuiSkeletonTrackingState.SkeletonTracked)
 			{
 				tracked[trackedCount] = ii;
@@ -193,22 +175,8 @@ public class SkeletonWrapper : MonoBehaviour {
 			{
 				for (int bone = 0; bone < (int)Kinect.NuiSkeletonPositionIndex.Count; bone++)
 				{
-					Vector3 oldpos = bonePos[player,bone];
-					
-					bonePos[player,bone] = kinectToWorld.MultiplyPoint3x4(kinect.getSkeleton().SkeletonData[trackedPlayers[player]].SkeletonPositions[bone]);
-					//bonePos[player,bone] = kinectToWorld.MultiplyPoint3x4(bonePos[player, bone]);
-					rawBonePos[player, bone] = kinect.getSkeleton().SkeletonData[trackedPlayers[player]].SkeletonPositions[bone];
-					
-					
-					Kinect.NuiSkeletonBoneOrientation[] or = kinect.getBoneOrientations(kinect.getSkeleton().SkeletonData[trackedPlayers[player]]);
-					boneLocalOrientation[player,bone] = or[bone].hierarchicalRotation.rotationQuaternion.GetQuaternion();
-					boneAbsoluteOrientation[player,bone] = or[bone].absoluteRotation.rotationQuaternion.GetQuaternion();
-					
-					//print("index " + bone + ", start" + (int)or[bone].startJoint + ", end" + (int)or[bone].endJoint);
-					
-					boneVel[player,bone] = (bonePos[player,bone] - oldpos) / deltaTime;
-					boneState[player,bone] = kinect.getSkeleton().SkeletonData[trackedPlayers[player]].eSkeletonPositionTrackingState[bone];
-					//print(kinect.getSkeleton().SkeletonData[player].Position.z);
+					bonePos[player,bone] = kinectToWorld.MultiplyPoint3x4(kinect.GetSkeleton().SkeletonData[trackedPlayers[player]].SkeletonPositions[bone]);
+					rawBonePos[player, bone] = kinect.GetSkeleton().SkeletonData[trackedPlayers[player]].SkeletonPositions[bone];
 				}
 			}
 		}

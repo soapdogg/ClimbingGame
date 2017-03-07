@@ -1,20 +1,20 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class YesScript : MonoBehaviour, IPointerEnterHandler
+public class YesCommand : MonoBehaviour, ICommand
 {
 
-    void OnTriggerEnter2D(Collider2D other)
+    public void OnTriggerEnter2D(Collider2D other)
     {
-        YesPressed();
+        Execute();
     }
 
-    public void OnPointerEnter(PointerEventData eventData)
+    public void OnMouseEnter()
     {
-        YesPressed();
+        Execute();
     }
 
-    private void YesPressed()
+    public void Execute()
     {
         Debug.Log("Main Menu: YesPressed()");
         #if UNITY_EDITOR
@@ -22,5 +22,10 @@ public class YesScript : MonoBehaviour, IPointerEnterHandler
         #else
             Application.Quit();
         #endif
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        Execute();
     }
 }
