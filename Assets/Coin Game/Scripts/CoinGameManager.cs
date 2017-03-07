@@ -6,7 +6,7 @@ public class CoinGameManager : MonoBehaviour, IManager
 
     public GameObject skeleton;
     private GameState currentState;
-    public enum GameState { NewGame, GameRunning, GameStopped }
+    public enum GameState { NewGame, GameRunning, GameStopped, Countdown }
 
 	private CoinGameManager(){}
 
@@ -19,10 +19,11 @@ public class CoinGameManager : MonoBehaviour, IManager
 
 	void Update ()
 	{
-	    if (currentState == GameState.GameRunning)
-	    {
-	        OverlayManager.singleton.UpdateTimer();
-	    }
+		if (currentState == GameState.GameRunning) {
+			OverlayManager.singleton.UpdateTimer ();
+		} else if (currentState == GameState.Countdown) {
+			OverlayManager.singleton.UpdateCountdown ();
+		}
 	}
 
 	public void SetStateToStopped()
@@ -39,6 +40,12 @@ public class CoinGameManager : MonoBehaviour, IManager
 	{
 		currentState = GameState.NewGame;
 	}
+
+	public void SetStateToCountdown()
+	{
+		currentState = GameState.Countdown;
+	}
+
 
 	public GameState GetGameState()
 	{

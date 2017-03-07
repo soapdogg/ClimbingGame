@@ -18,9 +18,8 @@ public class StartCommand: MonoBehaviour, ICommand
     {
         Debug.Log("Coin Game: StartPressed()");
         OverlayManager.singleton.SetStartTimeToNow();
-        CoinGameManager.singleton.SetStateToRunning();
-        CoinManager.singleton.GenerateCoins();
-        OverlayManager.singleton.EnableStartVisuals(true);
+		CoinGameManager.singleton.SetStateToCountdown();
+		OverlayManager.singleton.EnableCountdownVisuals (true);
     }
 
     public void OnPointerEnter(PointerEventData eventData)
