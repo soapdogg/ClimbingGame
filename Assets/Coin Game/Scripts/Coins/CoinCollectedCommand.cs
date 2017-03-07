@@ -1,21 +1,31 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class CoinCollectedCommand : MonoBehaviour
+public class CoinCollectedCommand : MonoBehaviour, ICommand
 {
 	public GameObject coin;
 
 	public void OnTriggerEnter2D(Collider2D other)
 	{
-		CoinPressed ();	
+		Execute();
 	}
 
 	public void OnMouseEnter()
 	{
-		CoinPressed ();
+		Execute();
 	}
-		
-	void Update () 
+
+    public void Execute()
+    {
+        if (CoinGameManager.singleton.GetGameState() == CoinGameManager.GameState.GameRunning)
+        {
+            CoinManager.singleton.IncrementNumPressed();
+            coin.SetActive(false);
+            Debug.Log("Coin Collected");
+        }
+    }
+
+    void Update () 
 	{
 		if (CoinGameManager.singleton.GetGameState () == CoinGameManager.GameState.GameRunning) 
 		{
@@ -23,14 +33,9 @@ public class CoinCollectedCommand : MonoBehaviour
 		}
 	}
 
-	private void CoinPressed()
-	{
-		if (CoinGameManager.singleton.GetGameState () == CoinGameManager.GameState.GameRunning)
-		{
-			CoinManager.singleton.IncrementNumPressed ();
-			coin.SetActive (false);
-			Debug.Log ("Coin Collected");
-		}
-	}
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        Execute();
+    }
 }
 

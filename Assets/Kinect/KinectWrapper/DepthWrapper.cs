@@ -11,7 +11,6 @@ using System.Collections;
 /// </summary>
 public class DepthWrapper: MonoBehaviour {
 	
-	public DeviceOrEmulator devOrEmu;
 	private Kinect.KinectInterface kinect;
 	
 	private struct frameData
@@ -52,8 +51,9 @@ public class DepthWrapper: MonoBehaviour {
 	public int[,] bounds;
 	
 	// Use this for initialization
-	void Start () {
-		kinect = devOrEmu.getKinect();
+	void Start ()
+	{
+	    kinect = KinectSensor.Instance;
 		//allocate space to store the data of storedFrames frames.
 		frameQueue = new Queue(storedFrames);
 		for(int ii = 0; ii < storedFrames; ii++){	

@@ -4,7 +4,7 @@ using System.IO;
 public class CoinManager : MonoBehaviour, IManager
 {
 	private const int NUM_COINS = 5;
-	private int numPressed;
+	private int numCoinsCollected;
 
 	public GameObject c1, c2, c3, c4, c5;
 	private GameObject[] coins;
@@ -19,7 +19,7 @@ public class CoinManager : MonoBehaviour, IManager
 
 	public void IncrementNumPressed()
 	{
-		if (++numPressed >= NUM_COINS) 
+		if (++numCoinsCollected >= NUM_COINS) 
 		{
 			CoinGameManager.singleton.SetStateToStopped ();
 			EndGameMenuManager.singleton.endGameMenu.enabled = true;
@@ -56,7 +56,7 @@ public class CoinManager : MonoBehaviour, IManager
 
 	public void Initialize()
 	{
-		numPressed = 0;
+		numCoinsCollected = 0;
 		coins = new []{c1, c2, c3, c4, c5};
 		foreach (GameObject go in coins)
 			go.SetActive (false);

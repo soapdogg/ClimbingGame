@@ -1,20 +1,28 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class ChangeDifficultyCommand: MonoBehaviour, IPointerEnterHandler
+public class ChangeDifficultyCommand: MonoBehaviour, ICommand
 {
 	public void OnTriggerEnter2D(Collider2D other)
 	{
-		ChangeDifficultyPressed();
+		Execute();
 	}
 
-	public void OnPointerEnter(PointerEventData eventData)
-	{
-		ChangeDifficultyPressed();
-	}
+    public void OnMouseEnter()
+    {
+        Execute();
+    }
 
-	private void ChangeDifficultyPressed()
+    public void Execute()
+    {
+        Debug.Log("Coin Game: Change Difficulty Pressed()");
+        OverlayManager.singleton.EnableDifficultyVisuals(true);
+        DifficultyMenuManager.singleton.EnableDifficultyVisuals(true);
+        OverlayManager.singleton.EnableDifficultyVisuals(true);
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
 	{
-		OverlayManager.singleton.ChangeDifficultyPressed ();	
+		Execute();
 	}
 }

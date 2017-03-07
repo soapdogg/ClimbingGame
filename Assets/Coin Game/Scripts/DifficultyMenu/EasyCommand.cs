@@ -1,20 +1,27 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class EasyCommand: MonoBehaviour, IPointerEnterHandler, ICommand
+public class EasyCommand: MonoBehaviour, ICommand
 {
 	public void OnTriggerEnter2D(Collider2D other)
 	{
-		EasyPressed();
+	    Execute();
 	}
 
-	public void OnPointerEnter(PointerEventData eventData)
-	{
-		EasyPressed();
-	}
+    public void OnMouseEnter()
+    {
+        Execute();
+    }
 
-	private void EasyPressed()
-	{
-		DifficultyMenuManager.singleton.EasyPressed ();
-	}
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        Execute();
+    }
+
+    public void Execute()
+    {
+        DifficultyMenuManager.singleton.SetDifficultyToEasy();
+        DifficultyMenuManager.singleton.DifficultyChanged();
+        Debug.Log("Difficulty Set to Easy");
+    }
 }

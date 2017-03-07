@@ -1,6 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 public class CoinGameManager : MonoBehaviour, IManager
 {
@@ -21,8 +19,10 @@ public class CoinGameManager : MonoBehaviour, IManager
 
 	void Update ()
 	{
-		if (currentState == GameState.GameRunning) 
-			OverlayManager.singleton.UpdateTimer();
+	    if (currentState == GameState.GameRunning)
+	    {
+	        OverlayManager.singleton.UpdateTimer();
+	    }
 	}
 
 	public void SetStateToStopped()
@@ -47,6 +47,6 @@ public class CoinGameManager : MonoBehaviour, IManager
 
 	public void Initialize()
 	{
-		SetStateToNew ();	
+		SetStateToNew ();
 	}
 }

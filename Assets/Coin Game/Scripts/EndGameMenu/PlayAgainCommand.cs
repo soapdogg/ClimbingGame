@@ -1,20 +1,30 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class PlayAgainCommand: MonoBehaviour, IPointerEnterHandler
+public class PlayAgainCommand: MonoBehaviour, ICommand
 {
 	public void OnTriggerEnter2D(Collider2D other)
 	{
-		PlayAgainPressed();
+		Execute();
 	}
 
-	public void OnPointerEnter(PointerEventData eventData)
-	{
-		PlayAgainPressed();
-	}
+    public void OnMouseEnter()
+    {
+        Execute();
+    }
 
-	private void PlayAgainPressed()
+    public void Execute()
+    {
+        Debug.Log("Coin Game: PlayAgainPressed()");
+        CoinGameManager.singleton.SetStateToNew();
+        EndGameMenuManager.singleton.endGameMenu.enabled = false;
+        OverlayManager.singleton.EnableStartVisuals(false);
+        OverlayManager.singleton.ResetTimes();
+        CoinManager.singleton.Initialize();
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
 	{
-		EndGameMenuManager.singleton.PlayAgainPressed ();	
+		Execute();
 	}
 }

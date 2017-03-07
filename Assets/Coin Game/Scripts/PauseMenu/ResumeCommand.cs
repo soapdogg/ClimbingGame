@@ -1,21 +1,30 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class ResumeCommand: MonoBehaviour, IPointerEnterHandler
+public class ResumeCommand: MonoBehaviour, ICommand
 {
 
     public void OnTriggerEnter2D(Collider2D other)
     {
-        ResumePressed();
+        Execute();
+    }
+
+    public void OnMouseEnter()
+    {
+        Execute();
+    }
+
+    public void Execute()
+    {
+        Debug.Log("Coin Game: ResumePressed()");
+        CoinGameManager.singleton.SetStateToRunning();
+        OverlayManager.singleton.SetStartTimeToNow();
+        PauseMenuManager.singleton.EnablePauseVisuals(false);
+        OverlayManager.singleton.EnablePauseVisuals(false);
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        ResumePressed();
-    }
-
-    private void ResumePressed()
-    {
-		PauseMenuManager.singleton.ResumePressed ();	
+        Execute();
     }
 }

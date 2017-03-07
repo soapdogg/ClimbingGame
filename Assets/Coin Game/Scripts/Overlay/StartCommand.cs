@@ -1,21 +1,30 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class StartCommand: MonoBehaviour, IPointerEnterHandler
+public class StartCommand: MonoBehaviour, ICommand
 {
 
 	public void OnTriggerEnter2D(Collider2D other)
 	{
-		StartPressed();
+		Execute();
 	}
 
-	public void OnPointerEnter(PointerEventData eventData)
-	{
-		StartPressed();
-	}
+    public void OnMouseEnter()
+    {
+        Execute();
+    }
 
-	private void StartPressed()
+    public void Execute()
+    {
+        Debug.Log("Coin Game: StartPressed()");
+        OverlayManager.singleton.SetStartTimeToNow();
+        CoinGameManager.singleton.SetStateToRunning();
+        CoinManager.singleton.GenerateCoins();
+        OverlayManager.singleton.EnableStartVisuals(true);
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
 	{
-		OverlayManager.singleton.StartPressed ();
+		Execute();
 	}
 }

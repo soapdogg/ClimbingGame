@@ -15,33 +15,6 @@ public class OverlayManager :MonoBehaviour, IManager
 		Initialize ();
 	}
 
-	public void ChangeDifficultyPressed()
-	{
-		Debug.Log ("Coin Game: Change Difficulty Pressed()");
-		EnableDifficultyVisuals (true);
-		DifficultyMenuManager.singleton.EnableDifficultyVisuals (true);
-		OverlayManager.singleton.EnableDifficultyVisuals (true);
-	}
-
-	public void PausePressed()
-	{
-		Debug.Log("Coin Game: PausePressed()");
-		CoinGameManager.singleton.SetStateToStopped();
-		initialTime = Time.time - startTime + initialTime;
-		EnablePauseVisuals (true);
-		PauseMenuManager.singleton.EnablePauseVisuals (true);
-	}
-
-	public void StartPressed()
-	{
-		Debug.Log("Coin Game: StartPressed()");
-		startTime = Time.time;
-		CoinGameManager cms = CoinGameManager.singleton;
-		cms.SetStateToRunning ();
-		CoinManager.singleton.GenerateCoins ();
-		EnableStartVisuals (true);
-	}
-
 	public void UpdateTimer()
 	{
 		elapsedTime = Time.time - startTime + initialTime;
@@ -60,11 +33,16 @@ public class OverlayManager :MonoBehaviour, IManager
 		initialTime = 0f;	
 	}
 
-	public void Initialize()
+    public void SetInitialTime()
+    {
+        initialTime = Time.time - startTime + initialTime;
+    }
+
+    public void Initialize()
 	{
 		ResetTimes ();
 		EnableStartVisuals (false);
-		SetDifficultyText ();
+		SetDifficultyText ("Easy");
 	}
 
 	public void EnableDifficultyVisuals(bool enable)
@@ -86,10 +64,8 @@ public class OverlayManager :MonoBehaviour, IManager
 		pauseText.enabled = !enable;
 	}
 
-	public void SetDifficultyText()
+	public void SetDifficultyText(string difficulty)
 	{
-		DifficultyMenuManager dms = DifficultyMenuManager.singleton;
-		string currentDifficulty = dms == null ? "Easy" : dms.currentDifficulty.ToString ();
-		difficultyText.text = "Change Difficulty\nCurrent: " + currentDifficulty; 	
+		difficultyText.text = "Change Difficulty\nCurrent: " + difficulty; 	
 	}
 }

@@ -1,6 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 
 public class DifficultyMenuManager :MonoBehaviour, IManager
 {
@@ -17,31 +15,24 @@ public class DifficultyMenuManager :MonoBehaviour, IManager
 		Initialize ();
 	}
 
-	public void EasyPressed()
-	{
-		currentDifficulty = Difficulty.Easy;
-		DifficultyChanged ();
-		Debug.Log("Difficulty Set to Easy");
-	}
+    public void SetDifficultyToEasy()
+    {
+        currentDifficulty = Difficulty.Easy;
+    }
 
-	public void MediumPressed()
-	{
-		currentDifficulty = Difficulty.Medium;
-		DifficultyChanged ();
-		Debug.Log("Difficulty Set to Medium");
-	}
+    public void SetDifficultyToMedium()
+    {
+        currentDifficulty = Difficulty.Medium;
+    }
 
-	public void HardPressed()
-	{
-		currentDifficulty = Difficulty.Hard;
-		DifficultyChanged ();
-		Debug.Log("Difficulty Set to Hard");
-	}
+    public void SetDifficultyToHard()
+    {
+        currentDifficulty = Difficulty.Hard;
+    }
 
 	public void EnableDifficultyVisuals(bool enable)
 	{
 		difficultyMenu.enabled = enable;
-	
 	}
 
 	public void Initialize()
@@ -50,11 +41,10 @@ public class DifficultyMenuManager :MonoBehaviour, IManager
 		difficultyMenu.enabled = false;
 	}
 
-	private void DifficultyChanged()
+	public void DifficultyChanged()
 	{
-		OverlayManager.singleton.SetDifficultyText ();
+		OverlayManager.singleton.SetDifficultyText (currentDifficulty.ToString());
 		EnableDifficultyVisuals (false);
 		OverlayManager.singleton.EnableDifficultyVisuals (false);
 	}
-
 }

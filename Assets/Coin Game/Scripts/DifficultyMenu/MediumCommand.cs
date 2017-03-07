@@ -1,20 +1,27 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class MediumCommand: MonoBehaviour, IPointerEnterHandler
+public class MediumCommand: MonoBehaviour, ICommand
 {
-	public void OnTriggerEnter2D(Collider2D other)
-	{
-		MediumPressed();
-	}
+    public void OnTriggerEnter2D(Collider2D other)
+    {
+        Execute();
+    }
 
-	public void OnPointerEnter(PointerEventData eventData)
-	{
-		MediumPressed();
-	}
+    public void OnMouseEnter()
+    {
+        Execute();
+    }
 
-	private void MediumPressed()
-	{
-		DifficultyMenuManager.singleton.MediumPressed ();
-	}
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        Execute();
+    }
+
+    public void Execute()
+    {
+        DifficultyMenuManager.singleton.SetDifficultyToMedium();
+        DifficultyMenuManager.singleton.DifficultyChanged();
+        Debug.Log("Difficulty Set to Medium");
+    }
 }

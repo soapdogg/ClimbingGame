@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.EventSystems;
 
 public class EndGameMenuManager : MonoBehaviour, IManager
 {
@@ -13,22 +12,6 @@ public class EndGameMenuManager : MonoBehaviour, IManager
 	{
 		singleton = this;
 		Initialize ();
-	}
-
-	public void PlayAgainPressed()
-	{
-		Debug.Log("Coin Game: PlayAgainPressed()");
-		CoinGameManager cgs = CoinGameManager.singleton;
-		cgs.SetStateToNew ();
-		endGameMenu.enabled = false;
-		OverlayManager.singleton.EnableStartVisuals (false);
-		OverlayManager.singleton.ResetTimes ();
-		CoinManager.singleton.Initialize ();
-	}
-
-	public void ViewHighScorePressed()
-	{
-		Debug.Log("Todo: make high score scene");
 	}
 
 	public void Initialize()

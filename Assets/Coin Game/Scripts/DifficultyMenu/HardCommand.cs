@@ -1,20 +1,27 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class HardCommand: MonoBehaviour, IPointerEnterHandler
+public class HardCommand: MonoBehaviour, ICommand
 {
-	public void OnTriggerEnter2D(Collider2D other)
-	{
-		HardPressed();
-	}
+    public void OnTriggerEnter2D(Collider2D other)
+    {
+        Execute();
+    }
 
-	public void OnPointerEnter(PointerEventData eventData)
-	{
-		HardPressed();
-	}
+    public void OnMouseEnter()
+    {
+        Execute();
+    }
 
-	private void HardPressed()
-	{
-		DifficultyMenuManager.singleton.HardPressed ();
-	}
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        Execute();
+    }
+
+    public void Execute()
+    {
+        DifficultyMenuManager.singleton.SetDifficultyToHard();
+        DifficultyMenuManager.singleton.DifficultyChanged();
+        Debug.Log("Difficulty Set to Hard");
+    }
 }

@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class SkeletonWrapper : MonoBehaviour {
 	
-	public DeviceOrEmulator devOrEmu;
 	private Kinect.KinectInterface kinect;
 	
 	private bool updatedSkeleton = false;
@@ -31,8 +30,9 @@ public class SkeletonWrapper : MonoBehaviour {
 	public Matrix4x4 flipMatrix;
 	
 	// Use this for initialization
-	void Start () {
-		kinect = devOrEmu.getKinect();
+	void Start ()
+	{
+	    kinect = KinectSensor.Instance;
 		players = new Kinect.NuiSkeletonTrackingState[Kinect.Constants.NuiSkeletonCount];
 		trackedPlayers = new int[Kinect.Constants.NuiSkeletonMaxTracked];
 		trackedPlayers[0] = -1;
