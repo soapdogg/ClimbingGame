@@ -7,6 +7,7 @@ public class CoinManager : MonoBehaviour, IManager
 	private int numCoinsCollected;
 
 	public GameObject c1, c2, c3, c4, c5;
+	public AudioSource coinSound;
 	private GameObject[] coins;
 
 	public static CoinManager singleton { get; private set;}

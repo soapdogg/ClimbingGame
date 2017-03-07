@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
+[RequireComponent(typeof(AudioSource))]
+
 public class CoinCollectedCommand : MonoBehaviour, ICommand
 {
 	public GameObject coin;
@@ -18,9 +20,10 @@ public class CoinCollectedCommand : MonoBehaviour, ICommand
     public void Execute()
     {
         if (CoinGameManager.singleton.GetGameState() == CoinGameManager.GameState.GameRunning)
-        {
+		{
             CoinManager.singleton.IncrementNumPressed();
             coin.SetActive(false);
+			CoinManager.singleton.coinSound.Play ();
             Debug.Log("Coin Collected");
         }
     }
