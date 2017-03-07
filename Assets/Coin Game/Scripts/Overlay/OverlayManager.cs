@@ -24,8 +24,8 @@ public class OverlayManager :MonoBehaviour, IManager
 	public void UpdateCountdown()
 	{
 		elapsedTime = Time.time - startTime + initialTime;
-		countdownText.text = string.Format ("{0:0}", 3 - Mathf.Round (elapsedTime * 100.0f) / 100.0f); 
-		if (elapsedTime > 3) {
+		countdownText.text = string.Format ("{0:0}", Mathf.Ceil(3 - Mathf.Round (elapsedTime * 100.0f) / 100.0f)); 
+		if (elapsedTime >= 3) {
 			SetStartTimeToNow ();
 			SetInitialTime ();
 			CoinGameManager.singleton.SetStateToRunning();
