@@ -10,7 +10,7 @@ using UnityEngine.SocialPlatforms.Impl;
 
 public class HighScoreScript
 {
-	private const int MAX_NUM_OF_HIGH_SCORES = 5;
+	public const int MAX_NUM_OF_HIGH_SCORES = 5;
 
 	public static void writeHighScore (string name, float score)
 	{
@@ -48,7 +48,8 @@ public class HighScoreScript
 	public static string getHighScoreFilePath ()
 	{
 		string path = Path.Combine ("Assets", "Coin Game");
-		path = Path.Combine (path, "highscores.txt");
+		path = Path.Combine (path, "HighScores");
+		path = Path.Combine (path, "hard_highScores.txt");
 		if (!File.Exists (path)) {
 			File.Create (path);
 		}
