@@ -12,7 +12,16 @@ public class CoinCollectedCommand : MonoBehaviour, ICommand
 		Execute();
 	}
 
-	public void OnMouseEnter()
+    void OnTriggerEnter(Collider other)
+    {
+        Debug.Log("Object: " + this.name + " collided with: " + other.name);
+        if (other.name.Equals("13_Hand_Left") || other.name.Equals("23_Hand_Right")) { 
+            Execute();
+        }
+    }
+
+
+    public void OnMouseEnter()
 	{
 		Execute();
 	}
