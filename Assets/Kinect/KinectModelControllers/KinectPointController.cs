@@ -35,8 +35,8 @@ public class KinectPointController : MonoBehaviour {
 		R_Arm_Chest = Right_Arm | Spine,
 		No_Feet = All & ~(Foot_Left | Foot_Right),
 		UpperBody = Shoulder_Center | Head|Shoulder_Left | Elbow_Left | Wrist_Left | Hand_Left|
-		Shoulder_Right | Elbow_Right | Wrist_Right | Hand_Right
-		
+		Shoulder_Right | Elbow_Right | Wrist_Right | Hand_Right,
+        Extremities = Hand_Left | Hand_Right | Foot_Left | Foot_Right
 	}
 	
 	public SkeletonWrapper sw;
@@ -64,11 +64,12 @@ public class KinectPointController : MonoBehaviour {
 	
 	private GameObject[] _bones; 
 
-	public BoneMask Mask = BoneMask.All;
+	public BoneMask Mask = BoneMask.Extremities;
 	
 	public float scale = 1.0f;
 	
-	void Start () {
+	void Start ()
+    {
 		_bones = new [] {Hip_Center, Spine, Shoulder_Center, Head,
 			Shoulder_Left, Elbow_Left, Wrist_Left, Hand_Left,
 			Shoulder_Right, Elbow_Right, Wrist_Right, Hand_Right,
