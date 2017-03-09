@@ -4,7 +4,6 @@ using Kinect;
 
 public class KinectSensor : MonoBehaviour, IKinectInterface
 {
-	//make KinectSensor a singleton (sort of)
 	private static IKinectInterface instance;
     public static IKinectInterface Instance
     {
@@ -30,32 +29,25 @@ public class KinectSensor : MonoBehaviour, IKinectInterface
 	/// what point (relative to kinectCenter) should the sensor look at
 	/// </summary>
 	public Vector4 lookAt;
-	
-	/// <summary>
-	/// Variables used to pass to smoothing function. Values are set to default based on Action in Motion's Research
-	/// </summary>
-	private float smoothing =0.5f;	
-	private float correction=0.5f;
-	private float prediction=0.5f;
-	private float jitterRadius=0.05f;
-	private float maxDeviationRadius=0.04f;
 
-    public bool enableNearMode = false;
+    /// <summary>
+    /// Variables used to pass to smoothing function. Values are set to default based on Action in Motion's Research
+    /// </summary>
+    private const float SMOOTHING = 0.5f;
+    private const float CORRECTION=0.5f;
+	private const float PREDICTION=0.5f;
+	private const float JITTER_RADIUS=0.05f;
+	private const float MAX_DEVIATION_RADIUS=0.04f;
 	
 	public NuiSkeletonFlags skeltonTrackingMode;
-	
 	
 	/// <summary>
 	///variables used for updating and accessing depth data 
 	/// </summary>
 	private bool updatedSkeleton;
 	private bool newSkeleton;
-	[HideInInspector]
-	private NuiSkeletonFrame skeletonFrame = new NuiSkeletonFrame { SkeletonData = new NuiSkeletonData[6] };
+	private NuiSkeletonFrame skeletonFrame = new NuiSkeletonFrame { SkeletonData = new NuiSkeletonData[1] };
 	
-	//image stream handles for the kinect
-	private IntPtr colorStreamHandle;
-	private IntPtr depthStreamHandle;
     private NuiTransformSmoothParameters smoothParameters;
 	
 	float IKinectInterface.GetSensorHeight()
@@ -73,24 +65,13 @@ public class KinectSensor : MonoBehaviour, IKinectInterface
 		return lookAt;
 	}
 	
-	
 	void Awake()
 	{
 	    if (instance != null) return;
 	    try
 	    {
-	        // The MSR Kinect DLL (native code) is going to load into the Unity process and stay resident even between debug runs of the game.  
-	        // So our component must be resilient to starting up on a second run when the Kinect DLL is already loaded and
-	        // perhaps even left in a running state.  Kinect does not appear to like having NuiInitialize called when it is already initialized as
-	        // it messes up the internal state and stops functioning.  It is resilient to having Shutdown called right before initializing even if it
-	        // hasn't been initialized yet.  So calling this first puts us in a good state on a first or second run.
-	        // However, calling NuiShutdown before starting prevents the image streams from being read, so if you want to use image data
-	        // (either depth or RGB), comment this line out.
-	        //NuiShutdown();
-
 	        int hr =
-	            NativeMethods.NuiInitialize(NuiInitializeFlags.UsesDepthAndPlayerIndex |
-	                                        NuiInitializeFlags.UsesSkeleton | NuiInitializeFlags.UsesColor);
+	            NativeMethods.NuiInitialize(NuiInitializeFlags.UsesSkeleton);
 	        if (hr != 0)
 	        {
 	            throw new Exception("NuiInitialize Failed.");
@@ -106,7 +87,6 @@ public class KinectSensor : MonoBehaviour, IKinectInterface
 	        long kinectAngle = (long) (theta*(180/Mathf.PI));
 	        NativeMethods.NuiCameraSetAngle(kinectAngle);
 
-	        //DontDestroyOnLoad(gameObject);
 	        Instance = this;
 	        NativeMethods.NuiSetDeviceStatusCallback(new NuiStatusProc(), IntPtr.Zero);
 	    }
@@ -123,13 +103,6 @@ public class KinectSensor : MonoBehaviour, IKinectInterface
 		newSkeleton = false;
 	}
 
-	/// <summary>
-	///The first time in each frame that it is called, poll the kinect for updated skeleton data and return
-	///true if there is new data. Subsequent calls do nothing and return the same value.
-	/// </summary>
-	/// <returns>
-	/// A <see cref="System.Boolean"/> : is there new data this frame
-	/// </returns>
 	bool IKinectInterface.PollSkeleton()
 	{
 		try
@@ -142,11 +115,11 @@ public class KinectSensor : MonoBehaviour, IKinectInterface
 				{
 					newSkeleton = true;
 				}
-				smoothParameters.fSmoothing = smoothing;
-				smoothParameters.fCorrection = correction;
-				smoothParameters.fJitterRadius = jitterRadius;
-				smoothParameters.fMaxDeviationRadius = maxDeviationRadius;
-				smoothParameters.fPrediction = prediction;
+				smoothParameters.fSmoothing = SMOOTHING;
+				smoothParameters.fCorrection = CORRECTION;
+				smoothParameters.fJitterRadius = JITTER_RADIUS;
+				smoothParameters.fMaxDeviationRadius = MAX_DEVIATION_RADIUS;
+				smoothParameters.fPrediction = PREDICTION;
 				NativeMethods.NuiTransformSmooth(ref skeletonFrame,ref smoothParameters);
 			}
 			return newSkeleton;
@@ -161,20 +134,7 @@ public class KinectSensor : MonoBehaviour, IKinectInterface
     {
 		return skeletonFrame;
 	}
-	
-	/// <summary>
-	/// Get all bones orientation based on the skeleton passed in
-	/// </summary>
-	/// <returns>
-	/// Bone Orientation in struct of NuiSkeletonBoneOrientation, quarternion and matrix
-	/// </returns>
-	NuiSkeletonBoneOrientation[] IKinectInterface.GetBoneOrientations(NuiSkeletonData skeletonData)
-    {
-		NuiSkeletonBoneOrientation[] boneOrientations = new NuiSkeletonBoneOrientation[(int)(NuiSkeletonPositionIndex.Count)];
-		NativeMethods.NuiSkeletonCalculateBoneOrientations(ref skeletonData, boneOrientations);
-		return boneOrientations;
-	}
-	
+		
 	void OnApplicationQuit()
 	{
 		try

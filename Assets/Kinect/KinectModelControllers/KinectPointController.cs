@@ -1,9 +1,9 @@
 using UnityEngine;
 
-public class KinectPointController : MonoBehaviour {
-	
+public class KinectPointController : MonoBehaviour
+{
 	//Assignments for a bitmask to control which bones to look at and which to ignore
-	public enum BoneMask
+	private enum BoneMask
 	{
 		None = 0x0,
 		Hip_Center = 0x1,
@@ -32,14 +32,8 @@ public class KinectPointController : MonoBehaviour {
 		Right_Arm = 0x100F00,
 		Left_Leg = 0x10F000,
 		Right_Leg = 0x1F0000,
-		R_Arm_Chest = Right_Arm | Spine,
-		No_Feet = All & ~(Foot_Left | Foot_Right),
-		UpperBody = Shoulder_Center | Head|Shoulder_Left | Elbow_Left | Wrist_Left | Hand_Left|
-		Shoulder_Right | Elbow_Right | Wrist_Right | Hand_Right,
         Extremities = Hand_Left | Hand_Right | Foot_Left | Foot_Right
 	}
-	
-	public SkeletonWrapper sw;
 	
 	public GameObject Hip_Center;
 	public GameObject Spine;
@@ -64,7 +58,7 @@ public class KinectPointController : MonoBehaviour {
 	
 	private GameObject[] _bones; 
 
-	public BoneMask Mask = BoneMask.Extremities;
+	private BoneMask Mask = BoneMask.Extremities;
 	
 	public float scale = 1.0f;
 	
@@ -75,20 +69,27 @@ public class KinectPointController : MonoBehaviour {
 			Shoulder_Right, Elbow_Right, Wrist_Right, Hand_Right,
 			Hip_Left, Knee_Left, Ankle_Left, Foot_Left,
 			Hip_Right, Knee_Right, Ankle_Right, Foot_Right};
-		
+	    for (int i = 0; i < _bones.Length; ++i)
+	    {
+	        _bones[i].SetActive(IsBoneActive(i));
+	    }
 	}
 	
-	void Update () {
-		if (SkeletonWrapper.singleton.PollSkeleton())
-		{
-			for( int ii = 0; ii < (int)Kinect.NuiSkeletonPositionIndex.Count; ii++) {
-				if( ((uint)Mask & (uint)(1 << ii) ) > 0 ){
-					_bones[ii].transform.localPosition = new Vector3(
-						sw.bonePos[0,ii].x * scale,
-						sw.bonePos[0,ii].y * scale,
-						sw.bonePos[0,ii].z * scale);
-				}
-			}
-		}
+	void Update ()
+	{
+	    if (!SkeletonWrapper.singleton.PollSkeleton()) return;
+	    for( int ii = 0; ii < _bones.Length; ii++)
+	    {
+	        if (!IsBoneActive(ii)) continue;
+	        _bones[ii].transform.localPosition = new Vector3(
+	            SkeletonWrapper.singleton.bonePos[ii].x * scale,
+	            SkeletonWrapper.singleton.bonePos[ii].y * scale,
+	            SkeletonWrapper.singleton.bonePos[ii].z * scale);
+	    }
 	}
+
+    private bool IsBoneActive(int index)
+    {
+        return ((uint) Mask & (uint) (1 << index)) > 0;
+    }
 }
