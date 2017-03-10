@@ -70,10 +70,8 @@ public class KinectPointController : MonoBehaviour
 			Hip_Left, Knee_Left, Ankle_Left, Foot_Left,
 			Hip_Right, Knee_Right, Ankle_Right, Foot_Right};
 	    for (int i = 0; i < _bones.Length; ++i)
-	    {
 	        _bones[i].SetActive(IsBoneActive(i));
-	    }
-	}
+    }
 	
 	void Update ()
 	{
