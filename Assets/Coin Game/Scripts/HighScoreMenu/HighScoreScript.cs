@@ -8,6 +8,13 @@ using System.Diagnostics;
 using System.Xml.Linq;
 using UnityEngine.SocialPlatforms.Impl;
 
+/*
+ * This class handles:
+ *      creating the dictionary to access the high scores
+ *      checking to see if the user's score is a high score
+ *      updating the high score file with the new score
+ *      returning the high scores from the dictionary for the given difficulty
+ */
 public class HighScoreScript
 {
 	public const int MAX_NUM_OF_HIGH_SCORES = 5;

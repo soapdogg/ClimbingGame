@@ -22,7 +22,7 @@ public class CoinManager : MonoBehaviour, IManager
 		if (++numCoinsCollected >= NUM_COINS) 
 		{
 			CoinGameManager.singleton.SetStateToStopped ();
-			EndGameMenuManager.singleton.endGameMenu.enabled = true;
+            EndGameMenuManager.singleton.EnableEndGameVisuals(true);
 			OverlayManager.singleton.pauseText.enabled = false;
 		}
 	}

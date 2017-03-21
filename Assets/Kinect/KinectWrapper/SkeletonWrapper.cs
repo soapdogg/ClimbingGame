@@ -68,7 +68,7 @@ public class SkeletonWrapper : MonoBehaviour
 		if (!updatedSkeleton)
 		{
 			updatedSkeleton = true;
-			if (kinect.PollSkeleton())
+			if (kinect != null && kinect.PollSkeleton())
 			{
 				newSkeleton = true;
 				long cur = kinect.GetSkeleton().liTimeStamp;

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-/**
+/*
  * This class handles:
  * 		Initializing the GUI objects for the high score
  * 		These GUI objects will only be visible if the user's score is a high score
@@ -11,9 +11,13 @@ public class HighScoreMenuScript : MonoBehaviour, IManager
 	public static HighScoreMenuScript singleton { get; private set; }
 
 	//input field for the user's name
-	private InputField submitHighScoreName;
+	public InputField submitHighScoreName;
+
 	//button to submit the high score
-	private Button submitHighScore;
+	public Button submitHighScore;
+
+    //whether the view is visible
+    private bool isEnabled;
 
 	void Start ()
 	{
@@ -23,6 +27,7 @@ public class HighScoreMenuScript : MonoBehaviour, IManager
 
 	public void Initialize ()
 	{
+        isEnabled = false;
 		if (submitHighScore == null) {
 			submitHighScore = GameObject.FindGameObjectWithTag ("CoinGameSubmitHighScoreButton").GetComponent<Button> () as Button;
 			submitHighScoreName = GameObject.FindGameObjectWithTag ("CoinGameScoreName").GetComponent<InputField> () as InputField;
@@ -36,6 +41,7 @@ public class HighScoreMenuScript : MonoBehaviour, IManager
 
 	public void SetEnabled (bool enabled)
 	{
+        isEnabled = enabled;
 		if (enabled) {
 			submitHighScore.transform.localScale = new Vector3 (1f, 1f, 1f);
 			submitHighScoreName.transform.localScale = new Vector3 (1f, 1f, 1f);
@@ -51,5 +57,10 @@ public class HighScoreMenuScript : MonoBehaviour, IManager
 	{
 		return submitHighScoreName.text.ToString ();
 	}
+
+    public bool IsViewEnabled()
+    {
+        return isEnabled;
+    }
 
 }

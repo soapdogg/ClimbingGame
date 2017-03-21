@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.EventSystems;
 
 /*
@@ -32,11 +33,17 @@ public class ViewHighScoreCommand: MonoBehaviour, ICommand
 
 	public void Execute ()
 	{
-		if (HighScoreManager.singleton.IsHighScore (OverlayManager.singleton.GetElapsedTime ())) {
-			Debug.Log ("High score!");
-		} else {
-			Debug.Log ("No high score :( ");
-		}
+        if (HighScoreMenuScript.singleton.IsViewEnabled())
+        {
+            Debug.Log("Enter your name!");
+        }
+        else
+        {
+            List<HighScore> scores = HighScoreManager.singleton.GetOrderedScores();
+            HighScoreDisplayManager.singleton.SetHighScoreList(scores);
+            EndGameMenuManager.singleton.EnableEndGameVisuals(false);
+            HighScoreMenuScript.singleton.SetEnabled(false);
+        }
 	}
 
 	public void OnPointerEnter (PointerEventData eventData)

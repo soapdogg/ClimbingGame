@@ -21,7 +21,6 @@ public class CoinCollectedCommand : MonoBehaviour, ICommand
         {
             CoinManager.singleton.IncrementNumPressed();
             coin.SetActive(false);
-            Debug.Log("Coin Collected");
         }
     }
 

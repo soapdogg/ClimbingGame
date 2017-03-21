@@ -24,6 +24,10 @@ public class EndGameMenuManager : MonoBehaviour, IManager
 	public void EnableEndGameVisuals (bool enable)
 	{
 		endGameMenu.enabled = enable;
-	}
+        if(enable && HighScoreManager.singleton.IsHighScore(OverlayManager.singleton.GetElapsedTime()))
+        {
+            HighScoreMenuScript.singleton.SetEnabled(true);
+        }
+    }
 
 }

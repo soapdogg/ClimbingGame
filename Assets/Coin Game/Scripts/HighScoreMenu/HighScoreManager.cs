@@ -21,7 +21,7 @@ public class HighScoreManager : MonoBehaviour, IManager
 
 	public static HighScoreManager singleton { get; private set; }
 
-	private Dictionary<DifficultyMenuManager.Difficulty, string> highScoreFileDict;
+	public Dictionary<DifficultyMenuManager.Difficulty, string> highScoreFileDict;
 
 	void Start ()
 	{
@@ -61,9 +61,11 @@ public class HighScoreManager : MonoBehaviour, IManager
 		list = GetOrderedScores ();
 
 		if (list.Count < MAX_NUM_OF_HIGH_SCORES || (list [MAX_NUM_OF_HIGH_SCORES - 1] as HighScore).score > score) {
-			return true;
+            Debug.Log("High score!");
+            return true;
 		}
-		return false;
+        Debug.Log("No high score :( ");
+        return false;
 	}
 
 	/*
