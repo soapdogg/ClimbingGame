@@ -3,6 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
+/*
+ * HighScore model object 
+ * 
+ * name: user's name
+ * score: user's time
+ */
 public class HighScore : IComparable<HighScore>
 {
 	public string name;
