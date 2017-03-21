@@ -7,7 +7,6 @@ using UnityEngine.EventSystems;
  */
 public class ViewHighScoreCommand: MonoBehaviour, ICommand
 {
-
 	public static ViewHighScoreCommand singleton { get; private set; }
 
 	void Start ()

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class OverlayManager :MonoBehaviour, IManager
+public class OverlayManager : MonoBehaviour, IManager
 {
 	public static OverlayManager singleton { get; private set; }
 

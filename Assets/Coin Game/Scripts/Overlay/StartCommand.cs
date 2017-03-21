@@ -4,27 +4,27 @@ using UnityEngine.EventSystems;
 public class StartCommand: MonoBehaviour, ICommand
 {
 
-	public void OnTriggerEnter2D(Collider2D other)
+	public void OnTriggerEnter2D (Collider2D other)
 	{
-		Execute();
+		Execute ();
 	}
 
-    public void OnMouseEnter()
-    {
-        Execute();
-    }
-
-    public void Execute()
-    {
-        Debug.Log("Coin Game: StartPressed()");
-        OverlayManager.singleton.SetStartTimeToNow();
-        CoinGameManager.singleton.SetStateToRunning();
-        CoinManager.singleton.GenerateCoins();
-        OverlayManager.singleton.EnableStartVisuals(true);
-    }
-
-    public void OnPointerEnter(PointerEventData eventData)
+	public void OnMouseEnter ()
 	{
-		Execute();
+		Execute ();
+	}
+
+	public void Execute ()
+	{
+		Debug.Log ("Coin Game: StartPressed()");
+		OverlayManager.singleton.SetStartTimeToNow ();
+		CoinGameManager.singleton.SetStateToRunning ();
+		CoinManager.singleton.GenerateCoins ();
+		OverlayManager.singleton.EnableStartVisuals (true);
+	}
+
+	public void OnPointerEnter (PointerEventData eventData)
+	{
+		Execute ();
 	}
 }
