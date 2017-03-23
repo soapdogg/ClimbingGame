@@ -125,7 +125,7 @@ public class KinectSensor : MonoBehaviour, KinectInterface {
 			}
 			
 			colorStreamHandle = IntPtr.Zero;
-			hr = NativeMethods.NuiImageStreamOpen(NuiImageType.Color, NuiImageResolution.resolution640x480, 0, 2, IntPtr.Zero, ref colorStreamHandle);
+			//hr = NativeMethods.NuiImageStreamOpen(NuiImageType.Color, NuiImageResolution.resolution640x480, 0, 2, IntPtr.Zero, ref colorStreamHandle);
 			//Debug.Log(colorStreamHandle);
 			if (hr != 0)
 			{

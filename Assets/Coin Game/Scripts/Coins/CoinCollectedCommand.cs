@@ -9,15 +9,16 @@ public class CoinCollectedCommand : MonoBehaviour, ICommand
 
 	public void OnTriggerEnter2D(Collider2D other)
 	{
-		Execute();
+		//Execute();
 	}
 
-    void OnTriggerEnter(Collider other)
+
+    public void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Object: " + this.name + " collided with: " + other.name);
-        if (other.name.Equals("13_Hand_Left") || other.name.Equals("23_Hand_Right")) { 
+        //Debug.Log("Object: " + this.name + " collided with: " + other.name);
+        //if (other.name.Equals("13_Hand_Left") || other.name.Equals("23_Hand_Right")) { 
             Execute();
-        }
+        //}
     }
 
 
@@ -25,6 +26,12 @@ public class CoinCollectedCommand : MonoBehaviour, ICommand
 	{
 		Execute();
 	}
+
+    public void OnMouseOver()
+    {
+        Debug.Log(Input.mousePosition.ToString());
+        Execute();
+    }
 
     public void Execute()
     {
@@ -37,8 +44,15 @@ public class CoinCollectedCommand : MonoBehaviour, ICommand
         }
     }
 
-    void Update () 
-	{
+    void Update ()
+    {
+        Ray ray;
+        RaycastHit hit;
+        ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out hit))
+        {
+            print(hit.collider.name);
+        }
 		if (CoinGameManager.singleton.GetGameState () == CoinGameManager.GameState.GameRunning) 
 		{
 			transform.Rotate (new Vector3 (0, 0, 45) * Time.deltaTime);	

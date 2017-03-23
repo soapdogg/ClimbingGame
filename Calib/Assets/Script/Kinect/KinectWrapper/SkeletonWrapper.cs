@@ -208,17 +208,16 @@ public class SkeletonWrapper : MonoBehaviour {
 					
 					bonePos[player,bone] = kinectToWorld.MultiplyPoint3x4(kinect.getSkeleton().SkeletonData[trackedPlayers[player]].SkeletonPositions[bone]);
                     //TODO bonepos = mapmatrix * bonepos here
-                    Matrix<float> mapMatrix;
-                    Vector<float> boneVect = Vector<float>.Build.Dense(
-                            new float[] { bonePos[player, bone].x, bonePos[player, bone].y, bonePos[player, bone].z, 1 });
-                    Vector<float> mapped = calibMatrix.Multiply(boneVect);
-                    mapped = mapped.Divide(mapped[2]);
-                    bonePos[player, bone] = new Vector3(mapped[0], mapped[1], mapped[2]);
 
 
                     //bonePos[player,bone] = kinectToWorld.MultiplyPoint3x4(bonePos[player, bone]);
                     rawBonePos[player, bone] = kinect.getSkeleton().SkeletonData[trackedPlayers[player]].SkeletonPositions[bone];
-                    
+
+                    Vector<float> boneVect = Vector<float>.Build.Dense(
+                            new float[] { rawBonePos[player, bone].x, rawBonePos[player, bone].y, rawBonePos[player, bone].z, 1 });
+                    Vector<float> mapped = calibMatrix.Multiply(boneVect);
+                    mapped = mapped.Divide(mapped[2]);
+                    bonePos[player, bone] = new Vector3(mapped[0], mapped[1], mapped[2]);
 
 
                     Kinect.NuiSkeletonBoneOrientation[] or = kinect.getBoneOrientations(kinect.getSkeleton().SkeletonData[trackedPlayers[player]]);
