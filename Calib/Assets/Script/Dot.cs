@@ -4,6 +4,8 @@ using System.IO;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Factorization;
 using System.Threading;
+using UnityEditor;
+using UnityEditor.VersionControl;
 
 public class Dot : MonoBehaviour {
 
@@ -30,11 +32,15 @@ public class Dot : MonoBehaviour {
             
             if (Physics.Raycast(ray, out hit) && hit.transform.name == dot.name)
             {
-                int handindex = 7;
-                if(rawBonePositions.Count >= 6)
+                int handindex = 11;
+                GameObject hand = GameObject.Find("13_Hand_Left");
+                if (rawBonePositions.Count >= 6)
                 {
-                    handindex = 11;
+                    hand = GameObject.Find("23_Hand_Right");
+                    handindex = 7;
                 }
+                MeshRenderer renderer = hand.GetComponent<MeshRenderer>();
+                renderer.material = Resources.Load("fuck this", typeof(Material)) as Material; 
                 string boner = "kinectPoints.Add(new Point(" + SkeletonWrapper.Instance.bonePos[0, handindex].x + 
                     ", " + SkeletonWrapper.Instance.bonePos[0, handindex].y + 
                     ", " + SkeletonWrapper.Instance.bonePos[0, handindex].z + "));";
@@ -54,7 +60,7 @@ public class Dot : MonoBehaviour {
                 Debug.Log(boner2);
                 canclick = false;
                 clickTime = Time.time;
-                //dot.SetActive(false);
+                dot.SetActive(false);
                
             }
         }
@@ -68,10 +74,12 @@ public class Dot : MonoBehaviour {
             Matrix<float> mapMatrix = FindTransformMatrix(rawBonePositions, screenPositions);
             SkeletonWrapper.Instance.calibMatrix = mapMatrix;
             merp = true;
-            StreamWriter file = new StreamWriter(@"C:\Users\rniemo\Desktop\Exaample.txt");
+
+            //TODO Make this better
+            StreamWriter file = new StreamWriter(@"C:\Users\Eric\Desktop\Exaample.txt");
             for (int i = 0; i < 12; i++)
             {
-                file.WriteLine(rawBonePositions[i]);
+                file.WriteLine(rawBonePositions[i].ToString());
                 Debug.Log(rawBonePositions[i]);
                 
                 
@@ -79,7 +87,7 @@ public class Dot : MonoBehaviour {
             file.WriteLine();
             for (int i = 0; i < 12; i++)
             {
-                file.WriteLine(screenPositions[i]);
+                file.WriteLine(screenPositions[i].ToString());
                 Debug.Log(screenPositions[i]);
             }
 
@@ -97,11 +105,11 @@ public class Dot : MonoBehaviour {
             Vector<float> kinectPoint = kinectPoints[i].toVector();
             Vector<float> screenPoint = screenPoints[i].toVector();
             Vector<float> mapped = mapMatrix.Multiply(kinectPoint);
+            file.WriteLine("Mapped w: " + mapped[2]);
             mapped = mapped.Divide(mapped[2]);
             
-            file.WriteLine("goal: " + screenPoint);
-            file.WriteLine("mapped: " + mapped);
-            file.WriteLine("Mapped w: " + mapped[2]);
+            file.WriteLine("goal: " + screenPoint.ToString());
+            file.WriteLine("mapped: " + mapped.ToString());
 
         }
     }
@@ -161,6 +169,11 @@ public class Dot : MonoBehaviour {
         public Vector<float> toVector()
         {
             return Vector<float>.Build.DenseOfArray(new float[] { x, y, z, 1 });
+        }
+
+        public string ToString()
+        {
+            return "(" + x + ", " + y + ", " + z + ")";
         }
     }
 

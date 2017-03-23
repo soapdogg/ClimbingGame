@@ -3,6 +3,7 @@
 /[Oo]bj/
 /[Bb]uild/
 /[Bb]uilds/
+/Calib/packages/
 /Assets/AssetStoreTools*
 /Calib/[Ll]ibrary/
 /Calib/[Tt]emp/

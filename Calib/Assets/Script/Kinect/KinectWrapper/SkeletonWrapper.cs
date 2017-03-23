@@ -70,8 +70,8 @@ public class SkeletonWrapper : MonoBehaviour {
         /*calibMatrix.Add(new Vector4(0.536515f, 0.00468861f, -0.108628f, 0.0213931f));
         calibMatrix.Add(new Vector4(0.000240319f, 0.549112f, 0.139695f, -0.607887f));
         calibMatrix.Add(new Vector4(-0.00175579f, -0.00180989f, 0.0521018f, 0.0811507f));*/
-        calibMatrix = Matrix<float>.Build.DenseIdentity(3, 4);
-    }
+	    calibMatrix = null;
+	}
 
     // Update is called once per frame
     void Update () {
@@ -208,16 +208,18 @@ public class SkeletonWrapper : MonoBehaviour {
 					
 					bonePos[player,bone] = kinectToWorld.MultiplyPoint3x4(kinect.getSkeleton().SkeletonData[trackedPlayers[player]].SkeletonPositions[bone]);
                     //TODO bonepos = mapmatrix * bonepos here
-
-
-                    //bonePos[player,bone] = kinectToWorld.MultiplyPoint3x4(bonePos[player, bone]);
+				    if (calibMatrix != null)
+				    {
+				        Vector<float> boneVect = Vector<float>.Build.Dense(
+				            new float[] {bonePos[player, bone].x, bonePos[player, bone].y, bonePos[player, bone].z, 1});
+				        Vector<float> mapped = calibMatrix.Multiply(boneVect);
+				        mapped = mapped.Divide(mapped[2]);
+				        bonePos[player, bone] = new Vector3(mapped[0], mapped[1], mapped[2]);
+				    }
+				    //bonePos[player,bone] = kinectToWorld.MultiplyPoint3x4(bonePos[player, bone]);
                     rawBonePos[player, bone] = kinect.getSkeleton().SkeletonData[trackedPlayers[player]].SkeletonPositions[bone];
 
-                    Vector<float> boneVect = Vector<float>.Build.Dense(
-                            new float[] { rawBonePos[player, bone].x, rawBonePos[player, bone].y, rawBonePos[player, bone].z, 1 });
-                    Vector<float> mapped = calibMatrix.Multiply(boneVect);
-                    mapped = mapped.Divide(mapped[2]);
-                    bonePos[player, bone] = new Vector3(mapped[0], mapped[1], mapped[2]);
+                   
 
 
                     Kinect.NuiSkeletonBoneOrientation[] or = kinect.getBoneOrientations(kinect.getSkeleton().SkeletonData[trackedPlayers[player]]);
