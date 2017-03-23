@@ -68,7 +68,7 @@ public class Dot : MonoBehaviour {
             Matrix<float> mapMatrix = FindTransformMatrix(rawBonePositions, screenPositions);
             SkeletonWrapper.Instance.calibMatrix = mapMatrix;
             merp = true;
-            /*StreamWriter file = new StreamWriter(@"C:\Users\rniemo\Desktop\Exaample.txt");
+            StreamWriter file = new StreamWriter(@"C:\Users\rniemo\Desktop\Exaample.txt");
             for (int i = 0; i < 12; i++)
             {
                 file.WriteLine(rawBonePositions[i]);
@@ -82,7 +82,27 @@ public class Dot : MonoBehaviour {
                 file.WriteLine(screenPositions[i]);
                 Debug.Log(screenPositions[i]);
             }
-            file.Close();*/
+
+            file.WriteLine(mapMatrix.ToString());
+            TestMatrix(rawBonePositions, screenPositions, mapMatrix, file);
+            file.Close();
+        }
+    }
+
+    static void TestMatrix(IList<Point> kinectPoints, IList<Point> screenPoints, Matrix<float> mapMatrix, StreamWriter file)
+    {
+        file.WriteLine("\nTESTING: ");
+        for (int i = 0; i < kinectPoints.Count; i++)
+        {
+            Vector<float> kinectPoint = kinectPoints[i].toVector();
+            Vector<float> screenPoint = screenPoints[i].toVector();
+            Vector<float> mapped = mapMatrix.Multiply(kinectPoint);
+            mapped = mapped.Divide(mapped[2]);
+            
+            file.WriteLine("goal: " + screenPoint);
+            file.WriteLine("mapped: " + mapped);
+            file.WriteLine("Mapped w: " + mapped[2]);
+
         }
     }
 
