@@ -1,40 +1,64 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
+[RequireComponent (typeof(AudioSource))]
+
 public class CoinCollectedCommand : MonoBehaviour, ICommand
 {
 	public GameObject coin;
 
-	public void OnTriggerEnter2D(Collider2D other)
+	public void OnTriggerEnter2D (Collider2D other)
 	{
-		Execute();
+		//Execute();
 	}
 
-	public void OnMouseEnter()
+
+	public void OnTriggerEnter (Collider other)
 	{
-		Execute();
+		//Debug.Log("Object: " + this.name + " collided with: " + other.name);
+		//if (other.name.Equals("13_Hand_Left") || other.name.Equals("23_Hand_Right")) { 
+		Execute ();
+		//}
 	}
 
-    public void Execute()
-    {
-        if (CoinGameManager.singleton.GetGameState() == CoinGameManager.GameState.GameRunning)
-        {
-            CoinManager.singleton.IncrementNumPressed();
-            coin.SetActive(false);
-        }
-    }
 
-    void Update () 
+	public void OnMouseEnter ()
 	{
-		if (CoinGameManager.singleton.GetGameState () == CoinGameManager.GameState.GameRunning) 
-		{
+		Execute ();
+	}
+
+	public void OnMouseOver ()
+	{
+		Debug.Log (Input.mousePosition.ToString ());
+		Execute ();
+	}
+
+	public void Execute ()
+	{
+		if (CoinGameManager.singleton.GetGameState () == CoinGameManager.GameState.GameRunning) {
+			CoinManager.singleton.IncrementNumPressed ();
+			coin.SetActive (false);
+			CoinManager.singleton.coinSound.Play ();
+			Debug.Log ("Coin Collected");
+		}
+	}
+
+	void Update ()
+	{
+		Ray ray;
+		RaycastHit hit;
+		ray = Camera.main.ScreenPointToRay (Input.mousePosition);
+		if (Physics.Raycast (ray, out hit)) {
+			print (hit.collider.name);
+		}
+		if (CoinGameManager.singleton.GetGameState () == CoinGameManager.GameState.GameRunning) {
 			transform.Rotate (new Vector3 (0, 0, 45) * Time.deltaTime);	
 		}
 	}
 
-    public void OnPointerEnter(PointerEventData eventData)
-    {
-        Execute();
-    }
+	public void OnPointerEnter (PointerEventData eventData)
+	{
+		Execute ();
+	}
 }
 
