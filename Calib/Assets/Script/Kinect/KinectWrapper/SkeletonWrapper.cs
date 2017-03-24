@@ -211,7 +211,7 @@ public class SkeletonWrapper : MonoBehaviour {
 				    if (calibMatrix != null)
 				    {
 				        Vector<float> boneVect = Vector<float>.Build.Dense(
-				            new float[] {bonePos[player, bone].x, bonePos[player, bone].y, bonePos[player, bone].z, 1});
+				            new float[] {10000 * bonePos[player, bone].x, 10000 * bonePos[player, bone].y, 10000 * bonePos[player, bone].z, 1});
 				        Vector<float> mapped = calibMatrix.Multiply(boneVect);
 				        mapped = mapped.Divide(mapped[2]);
 				        bonePos[player, bone] = new Vector3(mapped[0], mapped[1], mapped[2]);

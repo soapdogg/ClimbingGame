@@ -2,10 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using MathNet.Numerics.LinearAlgebra;
-using MathNet.Numerics.LinearAlgebra.Factorization;
-using System.Threading;
-using UnityEditor;
-using UnityEditor.VersionControl;
 
 public class Dot : MonoBehaviour {
 
@@ -48,9 +44,9 @@ public class Dot : MonoBehaviour {
                     ", " + hit.transform.position.y +
                     ", " + hit.transform.position.z + "));";
 
-                rawBonePositions.Add(new Point(SkeletonWrapper.Instance.bonePos[0, handindex].x,
-                        SkeletonWrapper.Instance.bonePos[0, handindex].y,
-                        SkeletonWrapper.Instance.bonePos[0, handindex].z));
+                rawBonePositions.Add(new Point(10000 * SkeletonWrapper.Instance.bonePos[0, handindex].x,
+                        10000 * SkeletonWrapper.Instance.bonePos[0, handindex].y,
+                        10000 * SkeletonWrapper.Instance.bonePos[0, handindex].z));
                 screenPositions.Add(new Point(hit.transform.position.x,
                         hit.transform.position.y,
                         hit.transform.position.z));
