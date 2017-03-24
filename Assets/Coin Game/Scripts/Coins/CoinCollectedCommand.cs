@@ -7,12 +7,6 @@ public class CoinCollectedCommand : MonoBehaviour, ICommand
 {
 	public GameObject coin;
 
-	public void OnTriggerEnter2D(Collider2D other)
-	{
-		//Execute();
-	}
-
-
     public void OnTriggerEnter(Collider other)
     {
         //Debug.Log("Object: " + this.name + " collided with: " + other.name);
@@ -27,11 +21,6 @@ public class CoinCollectedCommand : MonoBehaviour, ICommand
 		Execute();
 	}
 
-    public void OnMouseOver()
-    {
-        Debug.Log(Input.mousePosition.ToString());
-        Execute();
-    }
 
     public void Execute()
     {
