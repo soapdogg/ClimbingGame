@@ -1,7 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Runtime.InteropServices;
 using UnityEngine;
 using Kinect;
@@ -125,7 +122,7 @@ public class KinectSensor : MonoBehaviour, KinectInterface {
 			}
 			
 			colorStreamHandle = IntPtr.Zero;
-			hr = NativeMethods.NuiImageStreamOpen(NuiImageType.Color, NuiImageResolution.resolution640x480, 0, 2, IntPtr.Zero, ref colorStreamHandle);
+			//hr = NativeMethods.NuiImageStreamOpen(NuiImageType.Color, NuiImageResolution.resolution640x480, 0, 2, IntPtr.Zero, ref colorStreamHandle);
 			//Debug.Log(colorStreamHandle);
 			if (hr != 0)
 			{
