@@ -1,6 +1,5 @@
 using UnityEngine;
-using System.Collections;
-using Kinect;
+using MathNet.Numerics.LinearAlgebra;
 
 public class SkeletonWrapper : MonoBehaviour {
 	
@@ -9,7 +8,7 @@ public class SkeletonWrapper : MonoBehaviour {
 	
 	private bool updatedSkeleton = false;
 	private bool newSkeleton = false;
-	
+    public static SkeletonWrapper Instance;
 	[HideInInspector]
 	public Kinect.NuiSkeletonTrackingState[] players;
 	[HideInInspector]
@@ -31,9 +30,12 @@ public class SkeletonWrapper : MonoBehaviour {
 	
 	private Matrix4x4 kinectToWorld;
 	public Matrix4x4 flipMatrix;
+    public Matrix<float> calibMatrix { get; set; }
+    
 	
 	// Use this for initialization
 	void Start () {
+        Instance = this;
 		kinect = devOrEmu.getKinect();
 		players = new Kinect.NuiSkeletonTrackingState[Kinect.Constants.NuiSkeletonCount];
 		trackedPlayers = new int[Kinect.Constants.NuiSkeletonMaxTracked];
@@ -62,10 +64,14 @@ public class SkeletonWrapper : MonoBehaviour {
 
 		//final transform matrix offsets the rotation of the kinect, then translates to a new center
 		kinectToWorld = flipMatrix*trans*rot;
+        /*calibMatrix.Add(new Vector4(0.536515f, 0.00468861f, -0.108628f, 0.0213931f));
+        calibMatrix.Add(new Vector4(0.000240319f, 0.549112f, 0.139695f, -0.607887f));
+        calibMatrix.Add(new Vector4(-0.00175579f, -0.00180989f, 0.0521018f, 0.0811507f));*/
+	    calibMatrix = null;
 	}
-	
-	// Update is called once per frame
-	void Update () {
+
+    // Update is called once per frame
+    void Update () {
 		
 	}
 	
@@ -198,11 +204,22 @@ public class SkeletonWrapper : MonoBehaviour {
 					Vector3 oldpos = bonePos[player,bone];
 					
 					bonePos[player,bone] = kinectToWorld.MultiplyPoint3x4(kinect.getSkeleton().SkeletonData[trackedPlayers[player]].SkeletonPositions[bone]);
-					//bonePos[player,bone] = kinectToWorld.MultiplyPoint3x4(bonePos[player, bone]);
-					rawBonePos[player, bone] = kinect.getSkeleton().SkeletonData[trackedPlayers[player]].SkeletonPositions[bone];
-					
-					
-					Kinect.NuiSkeletonBoneOrientation[] or = kinect.getBoneOrientations(kinect.getSkeleton().SkeletonData[trackedPlayers[player]]);
+                    //TODO bonepos = mapmatrix * bonepos here
+				    if (calibMatrix != null)
+				    {
+				        Vector<float> boneVect = Vector<float>.Build.Dense(
+				            new float[] {10000 * bonePos[player, bone].x, 10000 * bonePos[player, bone].y, 10000 * bonePos[player, bone].z, 1});
+				        Vector<float> mapped = calibMatrix.Multiply(boneVect);
+				        mapped = mapped.Divide(mapped[2]);
+				        bonePos[player, bone] = new Vector3(mapped[0], mapped[1], mapped[2]);
+				    }
+				    //bonePos[player,bone] = kinectToWorld.MultiplyPoint3x4(bonePos[player, bone]);
+                    rawBonePos[player, bone] = kinect.getSkeleton().SkeletonData[trackedPlayers[player]].SkeletonPositions[bone];
+
+                   
+
+
+                    Kinect.NuiSkeletonBoneOrientation[] or = kinect.getBoneOrientations(kinect.getSkeleton().SkeletonData[trackedPlayers[player]]);
 					boneLocalOrientation[player,bone] = or[bone].hierarchicalRotation.rotationQuaternion.GetQuaternion();
 					boneAbsoluteOrientation[player,bone] = or[bone].absoluteRotation.rotationQuaternion.GetQuaternion();
 					
