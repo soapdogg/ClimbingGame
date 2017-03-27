@@ -9,7 +9,7 @@ public class ExitCommand : MonoBehaviour, ICommand
         Execute();
     }
 
-    public void OnTriggerEnter2D(Collider2D other)
+    public void OnTriggerEnter(Collider other)
     {
         Execute();
     }

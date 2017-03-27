@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 public class PlayCommand : MonoBehaviour, ICommand
 {
 
-    public void OnTriggerEnter2D(Collider2D other)
+    public void OnTriggerEnter(Collider other)
     {
         Execute();
     }
