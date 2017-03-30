@@ -132,7 +132,7 @@ public class KinectSensor : MonoBehaviour, KinectInterface {
 			
 			double theta = Mathf.Atan((lookAt.y+kinectCenter.y-sensorHeight) / (lookAt.z + kinectCenter.z));
 			long kinectAngle = (long)(theta * (180 / Mathf.PI));
-			NativeMethods.NuiCameraSetAngle(kinectAngle);
+			//NativeMethods.NuiCameraSetAngle(kinectAngle);
 			
 			DontDestroyOnLoad(gameObject);
 			KinectSensor.Instance = this;

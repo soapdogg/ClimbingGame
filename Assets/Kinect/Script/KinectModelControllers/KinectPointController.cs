@@ -75,8 +75,12 @@ public class KinectPointController : MonoBehaviour {
 	public GameObject Foot_Right;
 	
 	private GameObject[] _bones; //internal handle for the bones of the model
-	//private Vector4[] _bonePos; //internal handle for the bone positions from the kinect
-	
+                                 //private Vector4[] _bonePos; //internal handle for the bone positions from the kinect
+
+    private Vector3[,] previousFrames;
+    private int currentIndex;
+    private const int NUM_FRAMES = 10;
+
 	public int player;
 	public BoneMask Mask = BoneMask.All;
 	
@@ -84,6 +88,8 @@ public class KinectPointController : MonoBehaviour {
 	
 	// Use this for initialization
 	void Start () {
+        currentIndex = 0;
+        previousFrames = new Vector3[(int)Kinect.NuiSkeletonPositionIndex.Count,NUM_FRAMES];
 		//store bones in a list for easier access
 		_bones = new GameObject[(int)Kinect.NuiSkeletonPositionIndex.Count] {Hip_Center, Spine, Shoulder_Center, Head,
 			Shoulder_Left, Elbow_Left, Wrist_Left, Hand_Left,
@@ -105,12 +111,33 @@ public class KinectPointController : MonoBehaviour {
 				//_bonePos[ii] = sw.getBonePos(ii);
 				if( ((uint)Mask & (uint)(1 << ii) ) > 0 ){
 					//_bones[ii].transform.localPosition = sw.bonePos[player,ii];
-					_bones[ii].transform.localPosition = new Vector3(
-						sw.bonePos[player,ii].x * scale,
-						sw.bonePos[player,ii].y * scale,
-						sw.bonePos[player,ii].z * scale);
+                    previousFrames[ii,currentIndex] = new Vector3(
+                        sw.bonePos[player, ii].x * scale,
+                        sw.bonePos[player, ii].y * scale,
+                        sw.bonePos[player, ii].z * scale);
+                    /*_bones[ii].transform.localPosition = new Vector3(
+                        sw.bonePos[player, ii].x * scale,
+                        sw.bonePos[player, ii].y * scale,
+                        sw.bonePos[player, ii].z * scale);*/
+
+                    float x = 0;
+                    float y = 0;
+                    float z = 0;
+
+                    for (int i = 0; i < NUM_FRAMES; ++i) {
+                        x += previousFrames[ii, i].x;
+                        y += previousFrames[ii, i].y;
+                        z += previousFrames[ii, i].z;
+                    }
+
+                    x /= NUM_FRAMES;
+                    y /= NUM_FRAMES;
+                    z /= NUM_FRAMES;
+                     
+                    _bones[ii].transform.localPosition = new Vector3(x, y, z);
 				}
-			}
-		}
-	}
+            }
+            currentIndex = (currentIndex + 1) % NUM_FRAMES;
+        }
+    }
 }

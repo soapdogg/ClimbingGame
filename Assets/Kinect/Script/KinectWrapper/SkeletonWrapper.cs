@@ -30,7 +30,10 @@ public class SkeletonWrapper : MonoBehaviour {
 	
 	private Matrix4x4 kinectToWorld;
 	public Matrix4x4 flipMatrix;
-    public Matrix<float> calibMatrix { get; set; }
+    public Matrix<float> calibMatrix {get; set; }
+    // -1 for don't use a fixedZ value, otherwise use the value in fixedZ
+    public float fixedZ = -1;
+    public int pointScaling = 1;
     
 	
 	// Use this for initialization
@@ -68,6 +71,14 @@ public class SkeletonWrapper : MonoBehaviour {
         calibMatrix.Add(new Vector4(0.000240319f, 0.549112f, 0.139695f, -0.607887f));
         calibMatrix.Add(new Vector4(-0.00175579f, -0.00180989f, 0.0521018f, 0.0811507f));*/
 	    calibMatrix = null;
+        /*calibMatrix = Matrix<float>.Build.DenseOfRows(
+            new float[][]
+            {
+                new float[] { .01f, 0, 0, .02f}, 
+                new float[] { 0, .01f, 0, -1}, 
+                new float[] { 0, 0, .01f, 0 }
+            }
+            );*/
 	}
 
     // Update is called once per frame
@@ -208,7 +219,11 @@ public class SkeletonWrapper : MonoBehaviour {
 				    if (calibMatrix != null)
 				    {
 				        Vector<float> boneVect = Vector<float>.Build.Dense(
-				            new float[] {10000 * bonePos[player, bone].x, 10000 * bonePos[player, bone].y, 10000 * bonePos[player, bone].z, 1});
+				            new float[] {pointScaling * bonePos[player, bone].x, pointScaling * bonePos[player, bone].y, pointScaling * bonePos[player, bone].z, 1});
+                        if(fixedZ != -1)
+                        {
+                            boneVect[2] = fixedZ;
+                        }
 				        Vector<float> mapped = calibMatrix.Multiply(boneVect);
 				        mapped = mapped.Divide(mapped[2]);
 				        bonePos[player, bone] = new Vector3(mapped[0], mapped[1], mapped[2]);
