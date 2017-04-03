@@ -6,6 +6,6 @@ public class CoinSoundScript : MonoBehaviour {
 
 	void onCollisionStay(Collision col) {
 			GetComponent<AudioSource>().Play();﻿
-			Debug.Log ("sound script");
+			Debug.Log ("Coin Sound Playing");
 	}
 }

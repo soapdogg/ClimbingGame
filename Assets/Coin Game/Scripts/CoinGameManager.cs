@@ -5,6 +5,7 @@ public class CoinGameManager : MonoBehaviour, IManager
 	public static CoinGameManager singleton { get; private set; }
 
     public GameObject skeleton;
+	public AudioSource backgroundMusic;
     private GameState currentState;
     public enum GameState { NewGame, GameRunning, GameStopped, Countdown }
 
@@ -29,11 +30,13 @@ public class CoinGameManager : MonoBehaviour, IManager
 	public void SetStateToStopped()
 	{
 		currentState = GameState.GameStopped;
+		backgroundMusic.Play ();
 	}
 
 	public void SetStateToRunning()
 	{
 		currentState = GameState.GameRunning;
+		backgroundMusic.Play ();
 	}
 
 	public void SetStateToNew()
