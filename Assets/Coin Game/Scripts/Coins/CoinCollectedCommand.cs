@@ -44,7 +44,7 @@ public class CoinCollectedCommand : MonoBehaviour, ICommand
         }
 		if (CoinGameManager.singleton.GetGameState () == CoinGameManager.GameState.GameRunning) 
 		{
-			transform.Rotate (new Vector3 (0, 0, 45) * Time.deltaTime);	
+			transform.Rotate (new Vector3 (0, 200, 0) * Time.deltaTime);	
 		}
 	}
 
