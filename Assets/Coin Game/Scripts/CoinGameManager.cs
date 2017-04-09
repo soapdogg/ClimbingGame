@@ -34,7 +34,10 @@ public class CoinGameManager : MonoBehaviour, IManager
 
 	void TranslateCollisionBoxes ()
 	{
-		Renderer r = this.gameObject.AddComponent<MeshRenderer> ();
+		RectTransform objectRectTransform = gameObject.GetComponent<RectTransform> ();
+		//Debug.Log ("width: " + objectRectTransform.rect.width + ", height: " + objectRectTransform.rect.height);
+		float overlayWidth = objectRectTransform.rect.width;
+		float overlayHeight = objectRectTransform.rect.height;
 		for (int i = 0; i < this.transform.childCount; i++) {
 			
 			Transform child = this.transform.GetChild (i);
@@ -48,28 +51,21 @@ public class CoinGameManager : MonoBehaviour, IManager
 			float camHeight = 2f * Camera.main.orthographicSize;
 			float camWidth = camHeight * Camera.main.aspect;
 
-			Debug.Log (r.bounds.size);
+			float translatedX = (anchorPos.x / overlayWidth) * camWidth;
+			float translatedY = (anchorPos.y / overlayHeight) * camHeight;
+			float translatedWidth = (rect.rect.width / overlayWidth) * camWidth;
+			float translatedHeight = (rect.rect.height / overlayHeight) * camHeight;
 
-			float translatedX = (anchorPos.x / r.bounds.size.x) * camWidth;
-			float translatedY = (anchorPos.y / r.bounds.size.y) * camHeight;
-			float translatedWidth = (rect.rect.width / r.bounds.size.x) * camWidth;
-			float translatedHeight = (rect.rect.height / r.bounds.size.y) * camHeight;
 			Debug.Log (translatedX);
 			Debug.Log (translatedY);
 			Debug.Log (translatedWidth);
 			Debug.Log (translatedHeight);
 
-			var collider = child.GetComponent<BoxCollider> ();
+			BoxCollider collider = child.GetComponent<BoxCollider> ();
 			collider.bounds.SetMinMax (
 				new Vector3 (translatedX, translatedY, -10000),
-				new Vector3 (translatedX + translatedWidth, translatedY + translatedHeight, 100000));
-
-			collider.bounds.SetMinMax (
-				new Vector3 (0, 0, 0),
-				new Vector3 (5, 5, 5));
-			//collider.bounds.center = new Vector3 (translatedX + translatedWidth / 2, translatedY + translatedHeight / 2, 0);
-			//collider.bounds.size = new Vector3 (translatedWidth, translatedHeight, 10000);
-
+				new Vector3 (translatedX + translatedWidth, translatedY + translatedHeight, 100000)
+			);
 		}
 	}
 
